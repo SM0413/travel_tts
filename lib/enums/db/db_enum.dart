@@ -1,1 +1,1 @@
-enum DbEnum { errorLog }
+enum DbEnum { errorLog, users, texts, publicTexts }
