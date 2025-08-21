@@ -15,6 +15,9 @@ enum TextsEnum {
 
   /// 말하기 속도 0.1 ~ 1.0
   pitchSpeed,
+
+  /// 연결된 publicTexts 위치 정보
+  publicTextRef,
   createdAt,
   updatedAt,
 }
