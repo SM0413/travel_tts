@@ -6,6 +6,9 @@ abstract class RouterParamConst {
   static const String toastBgColor = "toastBgColor";
   static const String toastTextColor = "toastTextColor";
 
+  // 업로드
+  static const String source = "source";
+
   // 상세화면
   static const String id = "id";
 }

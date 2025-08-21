@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -12,7 +13,9 @@ abstract class GlobalUtil {
   /// [return] 값이 비어있으면 true, 아니면 false
   static bool isEmpty(dynamic value) {
     if (value == null) return true; // 먼저 null 체크
-    if (value is String || value is List || value is Map) {
+    if (value is String) {
+      return value.trim().isEmpty;
+    } else if (value is List || value is Map) {
       return value.isEmpty;
     } else if (value is num) {
       return value.isNaN || value < 0;
@@ -31,5 +34,18 @@ abstract class GlobalUtil {
 
   static GlobalKey<T> createGlobalKey<T extends State<StatefulWidget>>() {
     return GlobalKey<T>();
+  }
+
+  static List<Map<String, dynamic>> getDocs(
+    QuerySnapshot<Map<String, dynamic>> res,
+  ) {
+    return res.docs.map((doc) => doc.data()).toList();
+  }
+
+  static Map<String, dynamic>? getSingleDoc(
+    DocumentSnapshot<Map<String, dynamic>> res,
+  ) {
+    if (isEmpty(res.data())) return null;
+    return res.data();
   }
 }

@@ -47,7 +47,10 @@ class CommonErrorWidget extends StatelessWidget {
           if (isGoMain)
             TextButton(
               onPressed: () {
-                RouterUtil.go(context: context, routeEnum: RouterEnum.home);
+                RouterUtil.go(
+                  context: context,
+                  routeEnum: RouterEnum.navigation,
+                );
               },
               child: const CommonTextWidget("메인으로 돌아가기"),
             ),

@@ -13,7 +13,6 @@ void main() async {
   await dotenv.load(fileName: ".env");
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
   runApp(
     ProviderScope(
       child: ResponsiveSizer(builder: (p0, p1, p2) => const MyApp()),

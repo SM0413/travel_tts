@@ -24,15 +24,24 @@ class LocalDbStateProvider extends AsyncNotifier<LocalDbModel> {
     );
   }
 
-  Future<void> setState({List<TextsModel>? texts}) async {
+  Future<void> setState({
+    List<TextsModel>? texts,
+    List<String>? downloadedLangPack,
+  }) async {
     final Map<String, dynamic> fields = {
       if (texts != null) LocalDbEnum.texts.name: texts,
+      if (downloadedLangPack != null)
+        LocalDbEnum.downloadedLangPack.name: downloadedLangPack,
     };
 
     await _setLocalDb(fields: fields);
 
     state = AsyncData(
-      state.value?.copyWith(texts: texts ?? state.value!.texts) ??
+      state.value?.copyWith(
+            texts: texts ?? state.value!.texts,
+            downloadedLangPack:
+                downloadedLangPack ?? state.value!.downloadedLangPack,
+          ) ??
           const LocalDbModel(),
     );
   }
@@ -63,5 +72,5 @@ class LocalDbStateProvider extends AsyncNotifier<LocalDbModel> {
 
 final localDbStateProvider =
     AsyncNotifierProvider<LocalDbStateProvider, LocalDbModel>(
-      () => throw UnimplementedError(),
+      LocalDbStateProvider.new,
     );

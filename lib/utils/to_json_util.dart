@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:travel_tts/enums/db/error_log_enum.dart';
+import 'package:travel_tts/enums/db/users_enum.dart';
 
 abstract class ToJsonUtil {
   static final _auth = FirebaseAuth.instance;
@@ -15,6 +16,14 @@ abstract class ToJsonUtil {
       ErrorLogEnum.stackTrace.name: stackTrace.toString(),
       ErrorLogEnum.deviceInfo.name: deviceInfo,
       ErrorLogEnum.createdAt.name: FieldValue.serverTimestamp(),
+    };
+  }
+
+  static Map<String, dynamic> users({required String name}) {
+    return {
+      UsersEnum.name.name: name,
+      UsersEnum.createdAt.name: FieldValue.serverTimestamp(),
+      UsersEnum.updatedAt.name: FieldValue.serverTimestamp(),
     };
   }
 }

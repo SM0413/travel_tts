@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$LocalDbModel {
 
- List<TextsModel> get texts;
+ List<TextsModel> get texts; List<String> get downloadedLangPack;
 /// Create a copy of LocalDbModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $LocalDbModelCopyWith<LocalDbModel> get copyWith => _$LocalDbModelCopyWithImpl<L
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LocalDbModel&&const DeepCollectionEquality().equals(other.texts, texts));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LocalDbModel&&const DeepCollectionEquality().equals(other.texts, texts)&&const DeepCollectionEquality().equals(other.downloadedLangPack, downloadedLangPack));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(texts));
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(texts),const DeepCollectionEquality().hash(downloadedLangPack));
 
 @override
 String toString() {
-  return 'LocalDbModel(texts: $texts)';
+  return 'LocalDbModel(texts: $texts, downloadedLangPack: $downloadedLangPack)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $LocalDbModelCopyWith<$Res>  {
   factory $LocalDbModelCopyWith(LocalDbModel value, $Res Function(LocalDbModel) _then) = _$LocalDbModelCopyWithImpl;
 @useResult
 $Res call({
- List<TextsModel> texts
+ List<TextsModel> texts, List<String> downloadedLangPack
 });
 
 
@@ -62,10 +62,11 @@ class _$LocalDbModelCopyWithImpl<$Res>
 
 /// Create a copy of LocalDbModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? texts = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? texts = null,Object? downloadedLangPack = null,}) {
   return _then(_self.copyWith(
 texts: null == texts ? _self.texts : texts // ignore: cast_nullable_to_non_nullable
-as List<TextsModel>,
+as List<TextsModel>,downloadedLangPack: null == downloadedLangPack ? _self.downloadedLangPack : downloadedLangPack // ignore: cast_nullable_to_non_nullable
+as List<String>,
   ));
 }
 
@@ -150,10 +151,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<TextsModel> texts)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<TextsModel> texts,  List<String> downloadedLangPack)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LocalDbModel() when $default != null:
-return $default(_that.texts);case _:
+return $default(_that.texts,_that.downloadedLangPack);case _:
   return orElse();
 
 }
@@ -171,10 +172,10 @@ return $default(_that.texts);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<TextsModel> texts)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<TextsModel> texts,  List<String> downloadedLangPack)  $default,) {final _that = this;
 switch (_that) {
 case _LocalDbModel():
-return $default(_that.texts);case _:
+return $default(_that.texts,_that.downloadedLangPack);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -191,10 +192,10 @@ return $default(_that.texts);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<TextsModel> texts)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<TextsModel> texts,  List<String> downloadedLangPack)?  $default,) {final _that = this;
 switch (_that) {
 case _LocalDbModel() when $default != null:
-return $default(_that.texts);case _:
+return $default(_that.texts,_that.downloadedLangPack);case _:
   return null;
 
 }
@@ -206,7 +207,7 @@ return $default(_that.texts);case _:
 
 
 class _LocalDbModel implements LocalDbModel {
-  const _LocalDbModel({final  List<TextsModel> texts = const []}): _texts = texts;
+  const _LocalDbModel({final  List<TextsModel> texts = const [], final  List<String> downloadedLangPack = const ["한국어", "영어"]}): _texts = texts,_downloadedLangPack = downloadedLangPack;
   
 
  final  List<TextsModel> _texts;
@@ -214,6 +215,13 @@ class _LocalDbModel implements LocalDbModel {
   if (_texts is EqualUnmodifiableListView) return _texts;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_texts);
+}
+
+ final  List<String> _downloadedLangPack;
+@override@JsonKey() List<String> get downloadedLangPack {
+  if (_downloadedLangPack is EqualUnmodifiableListView) return _downloadedLangPack;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_downloadedLangPack);
 }
 
 
@@ -227,16 +235,16 @@ _$LocalDbModelCopyWith<_LocalDbModel> get copyWith => __$LocalDbModelCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LocalDbModel&&const DeepCollectionEquality().equals(other._texts, _texts));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LocalDbModel&&const DeepCollectionEquality().equals(other._texts, _texts)&&const DeepCollectionEquality().equals(other._downloadedLangPack, _downloadedLangPack));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_texts));
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_texts),const DeepCollectionEquality().hash(_downloadedLangPack));
 
 @override
 String toString() {
-  return 'LocalDbModel(texts: $texts)';
+  return 'LocalDbModel(texts: $texts, downloadedLangPack: $downloadedLangPack)';
 }
 
 
@@ -247,7 +255,7 @@ abstract mixin class _$LocalDbModelCopyWith<$Res> implements $LocalDbModelCopyWi
   factory _$LocalDbModelCopyWith(_LocalDbModel value, $Res Function(_LocalDbModel) _then) = __$LocalDbModelCopyWithImpl;
 @override @useResult
 $Res call({
- List<TextsModel> texts
+ List<TextsModel> texts, List<String> downloadedLangPack
 });
 
 
@@ -264,10 +272,11 @@ class __$LocalDbModelCopyWithImpl<$Res>
 
 /// Create a copy of LocalDbModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? texts = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? texts = null,Object? downloadedLangPack = null,}) {
   return _then(_LocalDbModel(
 texts: null == texts ? _self._texts : texts // ignore: cast_nullable_to_non_nullable
-as List<TextsModel>,
+as List<TextsModel>,downloadedLangPack: null == downloadedLangPack ? _self._downloadedLangPack : downloadedLangPack // ignore: cast_nullable_to_non_nullable
+as List<String>,
   ));
 }
 

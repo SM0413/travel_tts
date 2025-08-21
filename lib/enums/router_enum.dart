@@ -1,9 +1,7 @@
 enum RouterEnum {
-  home('/'),
   init('/init'),
-  my('/my'),
-  joinMain('/login'),
-  loginMain('/login');
+  navigation('/'),
+  uploadTexts('/upload/texts');
 
   final String path;
   const RouterEnum(this.path);

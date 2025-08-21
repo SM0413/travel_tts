@@ -6,6 +6,10 @@ import 'package:travel_tts/common/view/widgets/common_error_widget.dart';
 import 'package:travel_tts/constructs/router_param_const.dart';
 import 'package:travel_tts/enums/router_enum.dart';
 import 'package:travel_tts/init/view/init_main_page.dart';
+import 'package:travel_tts/main/provider/upload_texts_state_provider.dart';
+import 'package:travel_tts/main/view/upload_texts_main_page.dart';
+import 'package:travel_tts/navigation/provider/navigation_state_provider.dart';
+import 'package:travel_tts/navigation/view/navigation_main_page.dart';
 import 'package:travel_tts/utils/alert_util.dart';
 import 'package:travel_tts/utils/global_util.dart';
 import 'package:travel_tts/utils/router_util.dart';
@@ -68,6 +72,40 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: RouterEnum.init.name,
         builder: (context, state) => const InitMainPage(),
       ),
+      GoRoute(
+        path: RouterEnum.navigation.path,
+        name: RouterEnum.navigation.name,
+        builder: (context, state) => const NavigationMainPage(),
+        routes: [
+          GoRoute(
+            path: RouterEnum.uploadTexts.path,
+            name: RouterEnum.uploadTexts.name,
+            pageBuilder: (context, state) {
+              final source = RouterUtil.getParameter(
+                state: state,
+                key: RouterParamConst.source,
+              );
+              return _commonFadeBuilder(
+                state: state,
+                child: UploadTextsMainPage(source: source),
+              );
+            },
+            onExit: (context, state) async {
+              final confirm = await _commonLeavePage(
+                context: context,
+                isFinished: ref.read(uploadTextsStateProvider).isFinished,
+              );
+
+              if (!confirm) {
+                ref
+                    .read(navigationStateProvider.notifier)
+                    .setState(selectedIndex: 0);
+              }
+              return confirm;
+            },
+          ),
+        ],
+      ),
     ],
   );
 });
@@ -79,7 +117,6 @@ Widget _commonNoDataWidget({String? subTitle}) {
   );
 }
 
-// ignore: unused_element
 Future<bool> _commonLeavePage({
   required BuildContext context,
   required bool isFinished,
@@ -93,7 +130,6 @@ Future<bool> _commonLeavePage({
   );
 }
 
-// ignore: unused_element
 dynamic _commonFadeBuilder({
   required GoRouterState state,
   required Widget child,

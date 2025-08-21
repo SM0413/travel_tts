@@ -2,7 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:travel_tts/utils/color_util.dart';
 
 enum IconEnum {
+  home(Icon(Icons.home_outlined), Icon(Icons.home_rounded)),
+  setting(Icon(Icons.settings_outlined), Icon(Icons.settings_rounded)),
+  download(Icon(Icons.download_outlined), Icon(Icons.download_rounded)),
+  search(Icon(Icons.search_outlined), Icon(Icons.search_rounded)),
   noData(Icon(Icons.inbox_outlined), Icon(Icons.inbox_rounded)),
+  text(Icon(Icons.text_snippet_outlined), Icon(Icons.text_snippet_rounded)),
+  trans(Icon(Icons.translate_outlined), Icon(Icons.translate_rounded)),
+  speak(
+    Icon(Icons.record_voice_over_outlined),
+    Icon(Icons.record_voice_over_rounded),
+  ),
+  speakStop(
+    Icon(Icons.voice_over_off_outlined),
+    Icon(Icons.voice_over_off_rounded),
+  ),
   leftArrow(Icon(Icons.arrow_back_ios), Icon(Icons.arrow_back_ios)),
   rightArrow(Icon(Icons.arrow_forward_ios), Icon(Icons.arrow_forward_ios)),
   favorite(

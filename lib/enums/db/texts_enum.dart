@@ -7,8 +7,11 @@ enum TextsEnum {
   /// 번역된 내용
   target,
 
-  /// 언어 지역
-  locale,
+  /// 원어 언어 지역
+  sourceLocale,
+
+  /// 번역 언어 지역
+  targetLocale,
 
   /// 태그 정보
   tags,
@@ -16,8 +19,8 @@ enum TextsEnum {
   /// 말하기 속도 0.1 ~ 1.0
   pitchSpeed,
 
-  /// 연결된 publicTexts 위치 정보
-  publicTextRef,
+  /// 저장한 유저 정보
+  userId,
   createdAt,
   updatedAt,
 }

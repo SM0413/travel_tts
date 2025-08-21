@@ -1,9 +1,7 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:travel_tts/enums/icon_enum.dart';
-import 'package:travel_tts/enums/router_enum.dart';
 import 'package:travel_tts/utils/color_util.dart';
-import 'package:travel_tts/utils/router_util.dart';
 import 'package:travel_tts/utils/size_util.dart';
 
 abstract class ToastUtil {
@@ -74,7 +72,7 @@ abstract class ToastUtil {
       bgColor: ColorUtil.warning,
       onTapFn: () {
         if (context != null) {
-          RouterUtil.go(context: context, routeEnum: RouterEnum.loginMain);
+          // RouterUtil.go(context: context, routeEnum: RouterEnum.loginMain);
         }
         close();
       },
