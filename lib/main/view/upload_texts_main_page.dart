@@ -18,6 +18,7 @@ import 'package:travel_tts/navigation/provider/navigation_state_provider.dart';
 import 'package:travel_tts/utils/alert_util.dart';
 import 'package:travel_tts/utils/color_util.dart';
 import 'package:travel_tts/utils/global_util.dart';
+import 'package:travel_tts/utils/network_util.dart';
 import 'package:travel_tts/utils/router_util.dart';
 import 'package:travel_tts/utils/size_util.dart';
 import 'package:travel_tts/utils/text_util.dart';
@@ -298,6 +299,32 @@ class UploadTextsMainPage extends HookConsumerWidget {
                           ),
                         ),
                       ),
+                      FormBuilderSlider(
+                        name: TextsEnum.pitchSpeed.name,
+                        initialValue: 1,
+                        min: 0.1,
+                        max: 2,
+                        divisions: ((2 - 0.1) / 0.1).round(),
+                        decoration: const InputDecoration(
+                          labelText: "속도 조절",
+                          helperText: "0.1 단위로 조절할 수 있어요",
+                        ),
+                      ),
+                      FormBuilderCheckbox(
+                        key: state.shareKey,
+                        name: "share",
+                        title: const CommonTextWidget("공유하기"),
+                        subtitle: const CommonTextWidget(
+                          "다른 유저와 이 문장을 공유해보세요!",
+                        ),
+                        onChanged: (value) async {
+                          if (value == true &&
+                              !await NetworkUtil.isOnlineNow()) {
+                            ToastUtil.show(title: "인터넷 연결을 해주셔야 공유가 가능해요");
+                          }
+                        },
+                      ),
+                      SizeUtil.bottomPadding(),
                     ],
                   ),
                 ),

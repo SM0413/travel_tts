@@ -30,6 +30,7 @@ class UploadTextsStateProvider extends AutoDisposeNotifier<UploadTextsModel> {
       speakSpeedKey: GlobalUtil.createGlobalKey<FormFieldState>(),
       pitchSpeedKey: GlobalUtil.createGlobalKey<FormFieldState>(),
       tagKey: GlobalUtil.createGlobalKey<FormFieldState>(),
+      shareKey: GlobalUtil.createGlobalKey<FormFieldState>(),
       sourceTransLang: TranslateLanguage.korean,
       targetTransLang: TranslateLanguage.english,
     );

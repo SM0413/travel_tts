@@ -26,6 +26,7 @@ abstract class UploadTextsModel with _$UploadTextsModel {
     required GlobalKey speakSpeedKey,
     required GlobalKey pitchSpeedKey,
     required GlobalKey tagKey,
+    required GlobalKey shareKey,
     required TranslateLanguage sourceTransLang,
     required TranslateLanguage targetTransLang,
     @Default(false) bool isFinished,
