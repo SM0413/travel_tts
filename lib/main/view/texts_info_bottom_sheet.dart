@@ -108,6 +108,7 @@ class TextsInfoBottomSheet extends HookConsumerWidget {
                                   ToastUtil.show(title: "소스와 동일한 언어입니다");
                                   return;
                                 }
+                                await TtsUtil.stop();
                                 final targetType = TransEnum.values
                                     .firstWhere(
                                       (item) => item.ko == value,
@@ -160,6 +161,10 @@ class TextsInfoBottomSheet extends HookConsumerWidget {
                     await TtsUtil.play(
                       value: transStr.value,
                       speed: speedKey.currentState?.value ?? 1,
+                      transEnum: TransEnum.values.firstWhere(
+                        (item) => item.ko == targetKey.currentState?.value,
+                        orElse: () => TransEnum.english,
+                      ),
                     );
                     if (context.mounted) {
                       isPlay.value = false;

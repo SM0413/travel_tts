@@ -39,7 +39,9 @@ class UploadTextsMainPage extends HookConsumerWidget {
           state.sourceController.text = source ?? "";
         },
       );
-      return null;
+      return () {
+        TtsUtil.stop();
+      };
     }, []);
     return CommonScaffoldWidget(
       appBar: AppBar(title: const CommonTextWidget("업로드")),
@@ -131,6 +133,8 @@ class UploadTextsMainPage extends HookConsumerWidget {
                                   .toList(),
                               onChanged: (value) async {
                                 if (value == null) return;
+                                isNowSpeak.value = false;
+                                await TtsUtil.stop();
                                 stateNotifier.setState(
                                   sourceTransLang: TransEnum.values
                                       .firstWhere(
@@ -173,6 +177,8 @@ class UploadTextsMainPage extends HookConsumerWidget {
                                   .toList(),
                               onChanged: (value) async {
                                 if (value == null) return;
+                                isNowSpeak.value = false;
+                                await TtsUtil.stop();
                                 stateNotifier.setState(
                                   targetTransLang: TransEnum.values
                                       .firstWhere(
@@ -217,6 +223,8 @@ class UploadTextsMainPage extends HookConsumerWidget {
                                   message: "번역",
                                   child: IconButton(
                                     onPressed: () async {
+                                      isNowSpeak.value = false;
+                                      await TtsUtil.stop();
                                       final sourceText = state
                                           .sourceController
                                           .text
@@ -233,7 +241,6 @@ class UploadTextsMainPage extends HookConsumerWidget {
                                   ),
                                 ),
                               ),
-                              onSubmitted: (value) {},
                               validator: FormBuilderValidators.compose([
                                 FormBuilderValidators.required(
                                   checkNullOrEmpty: true,
@@ -272,14 +279,20 @@ class UploadTextsMainPage extends HookConsumerWidget {
                                         isNowSpeak.value = true;
                                         await TtsUtil.play(
                                           value: value,
-                                          speed: double.parse(
-                                            state
-                                                    .pitchSpeedKey
-                                                    .currentState
-                                                    ?.value ??
-                                                "1.0",
-                                          ),
+                                          speed:
+                                              state
+                                                  .pitchSpeedKey
+                                                  .currentState
+                                                  ?.value ??
+                                              1.0,
+                                          transEnum: TransEnum.values
+                                              .firstWhere(
+                                                (item) =>
+                                                    item.type ==
+                                                    state.targetTransLang,
+                                              ),
                                         );
+                                        isNowSpeak.value = false;
                                       }
                                     },
                                     icon: isNowSpeak.value
@@ -319,6 +332,10 @@ class UploadTextsMainPage extends HookConsumerWidget {
                           errorText: "필수 값 입니다",
                         ),
                       ]),
+                      onChangeEnd: (value) async {
+                        isNowSpeak.value = false;
+                        await TtsUtil.stop();
+                      },
                     ),
                     FormBuilderCheckbox(
                       key: state.shareKey,

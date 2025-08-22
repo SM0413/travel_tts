@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:travel_tts/enums/trans_enum.dart';
 
 abstract class TtsUtil {
   static final FlutterTts _tts = FlutterTts();
@@ -19,7 +20,7 @@ abstract class TtsUtil {
     final clamped = speed.clamp(0.5, 2.0);
     double rate = clamped;
     if (Platform.isIOS) {
-      rate = clamped / 3;
+      rate = (clamped / 3).clamp(0.0, 1.0);
     }
     await _tts.setSpeechRate(rate);
   }
@@ -27,7 +28,9 @@ abstract class TtsUtil {
   static Future<void> play({
     required String value,
     required double speed,
+    required TransEnum transEnum,
   }) async {
+    await _tts.setLanguage(transEnum.lang);
     await setSpeechRate(speed);
     await _tts.speak(value);
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:travel_tts/utils/color_util.dart';
 
 enum IconEnum {
+  person(Icon(Icons.person), Icon(Icons.person_rounded)),
   home(Icon(Icons.home_outlined), Icon(Icons.home_rounded)),
   setting(Icon(Icons.settings_outlined), Icon(Icons.settings_rounded)),
   download(Icon(Icons.download_outlined), Icon(Icons.download_rounded)),
