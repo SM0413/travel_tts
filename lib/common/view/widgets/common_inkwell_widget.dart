@@ -35,7 +35,9 @@ class CommonInkwellWidget extends HookConsumerWidget {
         radius: radius,
         onTap: () async {
           await onTap?.call();
-          FocusScope.of(context).unfocus();
+          if (context.mounted) {
+            FocusScope.of(context).unfocus();
+          }
         },
         onDoubleTap: onDoubleTap,
         onLongPress: onLongPress,

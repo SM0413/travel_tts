@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_tts/flutter_tts.dart';
 
 abstract class TtsUtil {
@@ -12,9 +14,14 @@ abstract class TtsUtil {
 
   static Future<void> setSpeechRate(double speed) async {
     await _init();
+    await _tts.setPitch(1);
     // rate는 0.1 ~ 2.0 사이의 값이어야 함
     final clamped = speed.clamp(0.5, 2.0);
-    await _tts.setPitch(clamped);
+    double rate = clamped;
+    if (Platform.isIOS) {
+      rate = clamped / 3;
+    }
+    await _tts.setSpeechRate(rate);
   }
 
   static Future<void> play({

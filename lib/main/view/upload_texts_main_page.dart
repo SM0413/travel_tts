@@ -306,7 +306,7 @@ class UploadTextsMainPage extends HookConsumerWidget {
                       key: state.pitchSpeedKey,
                       name: TextsEnum.pitchSpeed.name,
                       initialValue: 1,
-                      min: 0.5,
+                      min: 0.1,
                       max: 2,
                       divisions: ((2 - 0.1) / 0.1).round(),
                       decoration: const InputDecoration(
