@@ -73,7 +73,7 @@ class MainPage extends HookConsumerWidget {
         if (aFav == bFav) return 0;
         return aFav ? -1 : 1;
       });
-      if (GlobalUtil.isEmpty(filtered)) return [] as List<TextsModel>;
+      if (GlobalUtil.isEmpty(filtered)) return [].cast<TextsModel>();
       return filtered;
     }, [query, state.myTexts, localDbState!.favoriteList]);
 

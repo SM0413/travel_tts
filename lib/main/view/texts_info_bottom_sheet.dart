@@ -161,7 +161,9 @@ class TextsInfoBottomSheet extends HookConsumerWidget {
                       value: transStr.value,
                       speed: speedKey.currentState?.value ?? 1,
                     );
-                    isPlay.value = false;
+                    if (context.mounted) {
+                      isPlay.value = false;
+                    }
                   }
                 },
                 child: Container(

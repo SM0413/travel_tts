@@ -12,6 +12,10 @@ enum IconEnum {
   play(Icon(Icons.play_arrow_outlined), Icon(Icons.play_arrow_rounded)),
   pause(Icon(Icons.pause_outlined), Icon(Icons.pause_rounded)),
   stop(Icon(Icons.stop_outlined), Icon(Icons.stop_rounded)),
+  checkCircle(
+    Icon(Icons.check_circle_outline),
+    Icon(Icons.check_circle_rounded),
+  ),
   speak(
     Icon(Icons.record_voice_over_outlined),
     Icon(Icons.record_voice_over_rounded),
