@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UsersModel {
 
- int get id; String get name; DateTime? get createdAt; DateTime? get updatedAt;
+ String get id; String get name;@JsonKey(fromJson: ModelUtil.fromJsonTimeStamp) DateTime? get createdAt;@JsonKey(fromJson: ModelUtil.fromJsonTimeStamp) DateTime? get updatedAt;
 /// Create a copy of UsersModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $UsersModelCopyWith<$Res>  {
   factory $UsersModelCopyWith(UsersModel value, $Res Function(UsersModel) _then) = _$UsersModelCopyWithImpl;
 @useResult
 $Res call({
- int id, String name, DateTime? createdAt, DateTime? updatedAt
+ String id, String name,@JsonKey(fromJson: ModelUtil.fromJsonTimeStamp) DateTime? createdAt,@JsonKey(fromJson: ModelUtil.fromJsonTimeStamp) DateTime? updatedAt
 });
 
 
@@ -68,7 +68,7 @@ class _$UsersModelCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
@@ -156,7 +156,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name,  DateTime? createdAt,  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name, @JsonKey(fromJson: ModelUtil.fromJsonTimeStamp)  DateTime? createdAt, @JsonKey(fromJson: ModelUtil.fromJsonTimeStamp)  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UsersModel() when $default != null:
 return $default(_that.id,_that.name,_that.createdAt,_that.updatedAt);case _:
@@ -177,7 +177,7 @@ return $default(_that.id,_that.name,_that.createdAt,_that.updatedAt);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name,  DateTime? createdAt,  DateTime? updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name, @JsonKey(fromJson: ModelUtil.fromJsonTimeStamp)  DateTime? createdAt, @JsonKey(fromJson: ModelUtil.fromJsonTimeStamp)  DateTime? updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _UsersModel():
 return $default(_that.id,_that.name,_that.createdAt,_that.updatedAt);case _:
@@ -197,7 +197,7 @@ return $default(_that.id,_that.name,_that.createdAt,_that.updatedAt);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name,  DateTime? createdAt,  DateTime? updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name, @JsonKey(fromJson: ModelUtil.fromJsonTimeStamp)  DateTime? createdAt, @JsonKey(fromJson: ModelUtil.fromJsonTimeStamp)  DateTime? updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _UsersModel() when $default != null:
 return $default(_that.id,_that.name,_that.createdAt,_that.updatedAt);case _:
@@ -212,13 +212,13 @@ return $default(_that.id,_that.name,_that.createdAt,_that.updatedAt);case _:
 @JsonSerializable()
 
 class _UsersModel implements UsersModel {
-  const _UsersModel({this.id = -1, this.name = "", this.createdAt, this.updatedAt});
+  const _UsersModel({this.id = "", this.name = "", @JsonKey(fromJson: ModelUtil.fromJsonTimeStamp) this.createdAt, @JsonKey(fromJson: ModelUtil.fromJsonTimeStamp) this.updatedAt});
   factory _UsersModel.fromJson(Map<String, dynamic> json) => _$UsersModelFromJson(json);
 
-@override@JsonKey() final  int id;
+@override@JsonKey() final  String id;
 @override@JsonKey() final  String name;
-@override final  DateTime? createdAt;
-@override final  DateTime? updatedAt;
+@override@JsonKey(fromJson: ModelUtil.fromJsonTimeStamp) final  DateTime? createdAt;
+@override@JsonKey(fromJson: ModelUtil.fromJsonTimeStamp) final  DateTime? updatedAt;
 
 /// Create a copy of UsersModel
 /// with the given fields replaced by the non-null parameter values.
@@ -253,7 +253,7 @@ abstract mixin class _$UsersModelCopyWith<$Res> implements $UsersModelCopyWith<$
   factory _$UsersModelCopyWith(_UsersModel value, $Res Function(_UsersModel) _then) = __$UsersModelCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String name, DateTime? createdAt, DateTime? updatedAt
+ String id, String name,@JsonKey(fromJson: ModelUtil.fromJsonTimeStamp) DateTime? createdAt,@JsonKey(fromJson: ModelUtil.fromJsonTimeStamp) DateTime? updatedAt
 });
 
 
@@ -273,7 +273,7 @@ class __$UsersModelCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_UsersModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,

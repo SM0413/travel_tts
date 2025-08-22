@@ -1,4 +1,6 @@
 import 'package:google_mlkit_translation/google_mlkit_translation.dart';
+import 'package:travel_tts/common/provider/local_db_state_provider.dart';
+import 'package:travel_tts/enums/trans_enum.dart';
 import 'package:travel_tts/utils/network_util.dart';
 import 'package:travel_tts/utils/toast_util.dart';
 
@@ -20,7 +22,7 @@ class TransUtil {
   TransUtil(this.sourceLanguage, this.targetLanguage);
 
   /// 최초 1회만 모델 다운로드 + Translator 생성
-  Future<void> _ensureInitialized() async {
+  Future<void> _ensureInitialized(dynamic ref) async {
     if (_disposed) throw StateError('TransUtil already disposed');
     if (_initialized) return;
 
@@ -37,6 +39,19 @@ class TransUtil {
           );
           return;
         }
+        final asis = List<String>.from(
+          ref.read(localDbStateProvider).value!.downloadedLangPack,
+        );
+        await ref
+            .read(localDbStateProvider.notifier)
+            .setState(
+              downloadedLangPack: {
+                ...asis,
+                TransEnum.values
+                    .firstWhere((value) => value.type == targetLanguage)
+                    .ko,
+              }.toList(),
+            );
         await modelManager.downloadModel(targetLanguage.bcpCode);
       }
       if (!await isDownloaded(sourceLanguage)) {
@@ -47,6 +62,19 @@ class TransUtil {
           );
           return;
         }
+        final asis = List<String>.from(
+          ref.read(localDbStateProvider).value!.downloadedLangPack,
+        );
+        await ref
+            .read(localDbStateProvider.notifier)
+            .setState(
+              downloadedLangPack: {
+                ...asis,
+                TransEnum.values
+                    .firstWhere((value) => value.type == sourceLanguage)
+                    .ko,
+              }.toList(),
+            );
         await modelManager.downloadModel(sourceLanguage.bcpCode);
       }
 
@@ -61,11 +89,11 @@ class TransUtil {
   }
 
   /// 텍스트 번역 (빈값은 즉시 반환)
-  Future<String> translate(String? text) async {
+  Future<String> translate(String? text, dynamic ref) async {
     final input = (text ?? '').trim();
     if (input.isEmpty) return '';
 
-    await _ensureInitialized();
+    await _ensureInitialized(ref);
     if (_disposed) throw StateError('TransUtil already disposed');
 
     // OnDeviceTranslator는 재사용 가능

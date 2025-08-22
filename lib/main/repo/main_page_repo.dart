@@ -16,6 +16,16 @@ class MainPageRepo {
 
     return GlobalUtil.getDocs(res);
   }
+
+  Future<Map<String, dynamic>?> upload({
+    required Map<String, dynamic> data,
+  }) async {
+    await _db
+        .collection(DbEnum.texts.name)
+        .doc(data[TextsEnum.id.name])
+        .set(data);
+    return data;
+  }
 }
 
 final mainPageRepo = Provider<MainPageRepo>((ref) {

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TextsModel {
 
- int get id; String get source; String get target; String get sourceLocale; String get targetLocale; List<String> get tags; String get pitchSpeed; String get userId;@JsonKey(name: "created_at") DateTime? get createdAt;@JsonKey(name: "updated_at") DateTime? get updatedAt;
+ String get id; String get source; String get target; String get sourceLocale; String get targetLocale; List<String> get tags; String get userId; double get pitchSpeed; bool get isShare;@JsonKey(name: "created_at") DateTime? get createdAt;@JsonKey(name: "updated_at") DateTime? get updatedAt;
 /// Create a copy of TextsModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $TextsModelCopyWith<TextsModel> get copyWith => _$TextsModelCopyWithImpl<TextsMo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TextsModel&&(identical(other.id, id) || other.id == id)&&(identical(other.source, source) || other.source == source)&&(identical(other.target, target) || other.target == target)&&(identical(other.sourceLocale, sourceLocale) || other.sourceLocale == sourceLocale)&&(identical(other.targetLocale, targetLocale) || other.targetLocale == targetLocale)&&const DeepCollectionEquality().equals(other.tags, tags)&&(identical(other.pitchSpeed, pitchSpeed) || other.pitchSpeed == pitchSpeed)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TextsModel&&(identical(other.id, id) || other.id == id)&&(identical(other.source, source) || other.source == source)&&(identical(other.target, target) || other.target == target)&&(identical(other.sourceLocale, sourceLocale) || other.sourceLocale == sourceLocale)&&(identical(other.targetLocale, targetLocale) || other.targetLocale == targetLocale)&&const DeepCollectionEquality().equals(other.tags, tags)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.pitchSpeed, pitchSpeed) || other.pitchSpeed == pitchSpeed)&&(identical(other.isShare, isShare) || other.isShare == isShare)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,source,target,sourceLocale,targetLocale,const DeepCollectionEquality().hash(tags),pitchSpeed,userId,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,source,target,sourceLocale,targetLocale,const DeepCollectionEquality().hash(tags),userId,pitchSpeed,isShare,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'TextsModel(id: $id, source: $source, target: $target, sourceLocale: $sourceLocale, targetLocale: $targetLocale, tags: $tags, pitchSpeed: $pitchSpeed, userId: $userId, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'TextsModel(id: $id, source: $source, target: $target, sourceLocale: $sourceLocale, targetLocale: $targetLocale, tags: $tags, userId: $userId, pitchSpeed: $pitchSpeed, isShare: $isShare, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $TextsModelCopyWith<$Res>  {
   factory $TextsModelCopyWith(TextsModel value, $Res Function(TextsModel) _then) = _$TextsModelCopyWithImpl;
 @useResult
 $Res call({
- int id, String source, String target, String sourceLocale, String targetLocale, List<String> tags, String pitchSpeed, String userId,@JsonKey(name: "created_at") DateTime? createdAt,@JsonKey(name: "updated_at") DateTime? updatedAt
+ String id, String source, String target, String sourceLocale, String targetLocale, List<String> tags, String userId, double pitchSpeed, bool isShare,@JsonKey(name: "created_at") DateTime? createdAt,@JsonKey(name: "updated_at") DateTime? updatedAt
 });
 
 
@@ -65,17 +65,18 @@ class _$TextsModelCopyWithImpl<$Res>
 
 /// Create a copy of TextsModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? source = null,Object? target = null,Object? sourceLocale = null,Object? targetLocale = null,Object? tags = null,Object? pitchSpeed = null,Object? userId = null,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? source = null,Object? target = null,Object? sourceLocale = null,Object? targetLocale = null,Object? tags = null,Object? userId = null,Object? pitchSpeed = null,Object? isShare = null,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int,source: null == source ? _self.source : source // ignore: cast_nullable_to_non_nullable
+as String,source: null == source ? _self.source : source // ignore: cast_nullable_to_non_nullable
 as String,target: null == target ? _self.target : target // ignore: cast_nullable_to_non_nullable
 as String,sourceLocale: null == sourceLocale ? _self.sourceLocale : sourceLocale // ignore: cast_nullable_to_non_nullable
 as String,targetLocale: null == targetLocale ? _self.targetLocale : targetLocale // ignore: cast_nullable_to_non_nullable
 as String,tags: null == tags ? _self.tags : tags // ignore: cast_nullable_to_non_nullable
-as List<String>,pitchSpeed: null == pitchSpeed ? _self.pitchSpeed : pitchSpeed // ignore: cast_nullable_to_non_nullable
-as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
-as String,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as List<String>,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as String,pitchSpeed: null == pitchSpeed ? _self.pitchSpeed : pitchSpeed // ignore: cast_nullable_to_non_nullable
+as double,isShare: null == isShare ? _self.isShare : isShare // ignore: cast_nullable_to_non_nullable
+as bool,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));
@@ -162,10 +163,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String source,  String target,  String sourceLocale,  String targetLocale,  List<String> tags,  String pitchSpeed,  String userId, @JsonKey(name: "created_at")  DateTime? createdAt, @JsonKey(name: "updated_at")  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String source,  String target,  String sourceLocale,  String targetLocale,  List<String> tags,  String userId,  double pitchSpeed,  bool isShare, @JsonKey(name: "created_at")  DateTime? createdAt, @JsonKey(name: "updated_at")  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TextsModel() when $default != null:
-return $default(_that.id,_that.source,_that.target,_that.sourceLocale,_that.targetLocale,_that.tags,_that.pitchSpeed,_that.userId,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.source,_that.target,_that.sourceLocale,_that.targetLocale,_that.tags,_that.userId,_that.pitchSpeed,_that.isShare,_that.createdAt,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -183,10 +184,10 @@ return $default(_that.id,_that.source,_that.target,_that.sourceLocale,_that.targ
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String source,  String target,  String sourceLocale,  String targetLocale,  List<String> tags,  String pitchSpeed,  String userId, @JsonKey(name: "created_at")  DateTime? createdAt, @JsonKey(name: "updated_at")  DateTime? updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String source,  String target,  String sourceLocale,  String targetLocale,  List<String> tags,  String userId,  double pitchSpeed,  bool isShare, @JsonKey(name: "created_at")  DateTime? createdAt, @JsonKey(name: "updated_at")  DateTime? updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _TextsModel():
-return $default(_that.id,_that.source,_that.target,_that.sourceLocale,_that.targetLocale,_that.tags,_that.pitchSpeed,_that.userId,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.source,_that.target,_that.sourceLocale,_that.targetLocale,_that.tags,_that.userId,_that.pitchSpeed,_that.isShare,_that.createdAt,_that.updatedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -203,10 +204,10 @@ return $default(_that.id,_that.source,_that.target,_that.sourceLocale,_that.targ
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String source,  String target,  String sourceLocale,  String targetLocale,  List<String> tags,  String pitchSpeed,  String userId, @JsonKey(name: "created_at")  DateTime? createdAt, @JsonKey(name: "updated_at")  DateTime? updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String source,  String target,  String sourceLocale,  String targetLocale,  List<String> tags,  String userId,  double pitchSpeed,  bool isShare, @JsonKey(name: "created_at")  DateTime? createdAt, @JsonKey(name: "updated_at")  DateTime? updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _TextsModel() when $default != null:
-return $default(_that.id,_that.source,_that.target,_that.sourceLocale,_that.targetLocale,_that.tags,_that.pitchSpeed,_that.userId,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.source,_that.target,_that.sourceLocale,_that.targetLocale,_that.tags,_that.userId,_that.pitchSpeed,_that.isShare,_that.createdAt,_that.updatedAt);case _:
   return null;
 
 }
@@ -218,10 +219,10 @@ return $default(_that.id,_that.source,_that.target,_that.sourceLocale,_that.targ
 @JsonSerializable()
 
 class _TextsModel implements TextsModel {
-  const _TextsModel({this.id = -1, this.source = "", this.target = "", this.sourceLocale = "", this.targetLocale = "", final  List<String> tags = const [], this.pitchSpeed = "", this.userId = "", @JsonKey(name: "created_at") this.createdAt, @JsonKey(name: "updated_at") this.updatedAt}): _tags = tags;
+  const _TextsModel({this.id = "", this.source = "", this.target = "", this.sourceLocale = "", this.targetLocale = "", final  List<String> tags = const [], this.userId = "", this.pitchSpeed = 1, this.isShare = false, @JsonKey(name: "created_at") this.createdAt, @JsonKey(name: "updated_at") this.updatedAt}): _tags = tags;
   factory _TextsModel.fromJson(Map<String, dynamic> json) => _$TextsModelFromJson(json);
 
-@override@JsonKey() final  int id;
+@override@JsonKey() final  String id;
 @override@JsonKey() final  String source;
 @override@JsonKey() final  String target;
 @override@JsonKey() final  String sourceLocale;
@@ -233,8 +234,9 @@ class _TextsModel implements TextsModel {
   return EqualUnmodifiableListView(_tags);
 }
 
-@override@JsonKey() final  String pitchSpeed;
 @override@JsonKey() final  String userId;
+@override@JsonKey() final  double pitchSpeed;
+@override@JsonKey() final  bool isShare;
 @override@JsonKey(name: "created_at") final  DateTime? createdAt;
 @override@JsonKey(name: "updated_at") final  DateTime? updatedAt;
 
@@ -251,16 +253,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TextsModel&&(identical(other.id, id) || other.id == id)&&(identical(other.source, source) || other.source == source)&&(identical(other.target, target) || other.target == target)&&(identical(other.sourceLocale, sourceLocale) || other.sourceLocale == sourceLocale)&&(identical(other.targetLocale, targetLocale) || other.targetLocale == targetLocale)&&const DeepCollectionEquality().equals(other._tags, _tags)&&(identical(other.pitchSpeed, pitchSpeed) || other.pitchSpeed == pitchSpeed)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TextsModel&&(identical(other.id, id) || other.id == id)&&(identical(other.source, source) || other.source == source)&&(identical(other.target, target) || other.target == target)&&(identical(other.sourceLocale, sourceLocale) || other.sourceLocale == sourceLocale)&&(identical(other.targetLocale, targetLocale) || other.targetLocale == targetLocale)&&const DeepCollectionEquality().equals(other._tags, _tags)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.pitchSpeed, pitchSpeed) || other.pitchSpeed == pitchSpeed)&&(identical(other.isShare, isShare) || other.isShare == isShare)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,source,target,sourceLocale,targetLocale,const DeepCollectionEquality().hash(_tags),pitchSpeed,userId,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,source,target,sourceLocale,targetLocale,const DeepCollectionEquality().hash(_tags),userId,pitchSpeed,isShare,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'TextsModel(id: $id, source: $source, target: $target, sourceLocale: $sourceLocale, targetLocale: $targetLocale, tags: $tags, pitchSpeed: $pitchSpeed, userId: $userId, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'TextsModel(id: $id, source: $source, target: $target, sourceLocale: $sourceLocale, targetLocale: $targetLocale, tags: $tags, userId: $userId, pitchSpeed: $pitchSpeed, isShare: $isShare, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -271,7 +273,7 @@ abstract mixin class _$TextsModelCopyWith<$Res> implements $TextsModelCopyWith<$
   factory _$TextsModelCopyWith(_TextsModel value, $Res Function(_TextsModel) _then) = __$TextsModelCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String source, String target, String sourceLocale, String targetLocale, List<String> tags, String pitchSpeed, String userId,@JsonKey(name: "created_at") DateTime? createdAt,@JsonKey(name: "updated_at") DateTime? updatedAt
+ String id, String source, String target, String sourceLocale, String targetLocale, List<String> tags, String userId, double pitchSpeed, bool isShare,@JsonKey(name: "created_at") DateTime? createdAt,@JsonKey(name: "updated_at") DateTime? updatedAt
 });
 
 
@@ -288,17 +290,18 @@ class __$TextsModelCopyWithImpl<$Res>
 
 /// Create a copy of TextsModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? source = null,Object? target = null,Object? sourceLocale = null,Object? targetLocale = null,Object? tags = null,Object? pitchSpeed = null,Object? userId = null,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? source = null,Object? target = null,Object? sourceLocale = null,Object? targetLocale = null,Object? tags = null,Object? userId = null,Object? pitchSpeed = null,Object? isShare = null,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_TextsModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int,source: null == source ? _self.source : source // ignore: cast_nullable_to_non_nullable
+as String,source: null == source ? _self.source : source // ignore: cast_nullable_to_non_nullable
 as String,target: null == target ? _self.target : target // ignore: cast_nullable_to_non_nullable
 as String,sourceLocale: null == sourceLocale ? _self.sourceLocale : sourceLocale // ignore: cast_nullable_to_non_nullable
 as String,targetLocale: null == targetLocale ? _self.targetLocale : targetLocale // ignore: cast_nullable_to_non_nullable
 as String,tags: null == tags ? _self._tags : tags // ignore: cast_nullable_to_non_nullable
-as List<String>,pitchSpeed: null == pitchSpeed ? _self.pitchSpeed : pitchSpeed // ignore: cast_nullable_to_non_nullable
-as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
-as String,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as List<String>,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as String,pitchSpeed: null == pitchSpeed ? _self.pitchSpeed : pitchSpeed // ignore: cast_nullable_to_non_nullable
+as double,isShare: null == isShare ? _self.isShare : isShare // ignore: cast_nullable_to_non_nullable
+as bool,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));

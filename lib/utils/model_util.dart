@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:travel_tts/common/model/users_model.dart';
 import 'package:travel_tts/utils/global_util.dart';
 
@@ -38,5 +39,22 @@ abstract class ModelUtil {
           .cast<UsersModel>();
     }
     return UsersModel.fromJson(data);
+  }
+
+  static DateTime? fromJsonTimeStamp(dynamic data) {
+    if (data == null) return null;
+
+    if (data is Timestamp) {
+      return data.toDate();
+    }
+
+    if (data is int) {
+      return DateTime.fromMillisecondsSinceEpoch(data);
+    }
+
+    if (data is String) {
+      return DateTime.tryParse(data);
+    }
+    return null;
   }
 }

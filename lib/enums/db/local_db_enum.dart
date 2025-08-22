@@ -1,1 +1,1 @@
-enum LocalDbEnum { texts, downloadedLangPack }
+enum LocalDbEnum { texts, downloadedLangPack, favoriteList }

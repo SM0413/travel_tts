@@ -21,6 +21,7 @@ enum TextsEnum {
 
   /// 저장한 유저 정보
   userId,
+  isShare,
   createdAt,
   updatedAt,
 }

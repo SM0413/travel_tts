@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_mlkit_translation/google_mlkit_translation.dart';
 
@@ -10,26 +11,22 @@ abstract class UploadTextsModel with _$UploadTextsModel {
     required TextEditingController sourceController,
     required TextEditingController targetController,
     required TextEditingController localeController,
-    required TextEditingController speakSpeedController,
-    required TextEditingController pitchSpeedController,
     required TextEditingController tagController,
     required FocusNode sourceFocus,
     required FocusNode targetFocus,
     required FocusNode localeFocus,
-    required FocusNode speakSpeedFocus,
-    required FocusNode pitchSpeedFocus,
     required FocusNode tagFocus,
-    required GlobalKey formKey,
-    required GlobalKey sourceKey,
-    required GlobalKey targetKey,
-    required GlobalKey localeKey,
-    required GlobalKey speakSpeedKey,
-    required GlobalKey pitchSpeedKey,
-    required GlobalKey tagKey,
-    required GlobalKey shareKey,
+    required GlobalKey<FormBuilderState> formKey,
+    required GlobalKey<FormBuilderFieldState> sourceKey,
+    required GlobalKey<FormBuilderFieldState> targetKey,
+    required GlobalKey<FormBuilderFieldState> sourceLocaleKey,
+    required GlobalKey<FormBuilderFieldState> targetLocaleKey,
+    required GlobalKey<FormBuilderFieldState> pitchSpeedKey,
+    required GlobalKey<FormBuilderFieldState> tagKey,
+    required GlobalKey<FormBuilderFieldState> shareKey,
     required TranslateLanguage sourceTransLang,
     required TranslateLanguage targetTransLang,
     @Default(false) bool isFinished,
-    @Default(false) bool isShare,
+    @Default([]) List<String> tags,
   }) = _UploadTextsModel; // 올바른 생성자 이름
 }

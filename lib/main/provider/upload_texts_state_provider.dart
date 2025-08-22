@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mlkit_translation/google_mlkit_translation.dart';
 import 'package:travel_tts/main/model/upload_texts_model.dart';
@@ -14,23 +15,19 @@ class UploadTextsStateProvider extends AutoDisposeNotifier<UploadTextsModel> {
       sourceController: TextEditingController(),
       targetController: TextEditingController(),
       localeController: TextEditingController(),
-      speakSpeedController: TextEditingController(),
-      pitchSpeedController: TextEditingController(),
       tagController: TextEditingController(),
       sourceFocus: FocusNode(),
       targetFocus: FocusNode(),
       localeFocus: FocusNode(),
-      speakSpeedFocus: FocusNode(),
-      pitchSpeedFocus: FocusNode(),
       tagFocus: FocusNode(),
-      formKey: GlobalUtil.createGlobalKey<FormState>(),
-      sourceKey: GlobalUtil.createGlobalKey<FormFieldState>(),
-      targetKey: GlobalUtil.createGlobalKey<FormFieldState>(),
-      localeKey: GlobalUtil.createGlobalKey<FormFieldState>(),
-      speakSpeedKey: GlobalUtil.createGlobalKey<FormFieldState>(),
-      pitchSpeedKey: GlobalUtil.createGlobalKey<FormFieldState>(),
-      tagKey: GlobalUtil.createGlobalKey<FormFieldState>(),
-      shareKey: GlobalUtil.createGlobalKey<FormFieldState>(),
+      formKey: GlobalUtil.createGlobalKey<FormBuilderState>(),
+      sourceKey: GlobalUtil.createGlobalKey<FormBuilderFieldState>(),
+      targetKey: GlobalUtil.createGlobalKey<FormBuilderFieldState>(),
+      sourceLocaleKey: GlobalUtil.createGlobalKey<FormBuilderFieldState>(),
+      targetLocaleKey: GlobalUtil.createGlobalKey<FormBuilderFieldState>(),
+      pitchSpeedKey: GlobalUtil.createGlobalKey<FormBuilderFieldState>(),
+      tagKey: GlobalUtil.createGlobalKey<FormBuilderFieldState>(),
+      shareKey: GlobalUtil.createGlobalKey<FormBuilderFieldState>(),
       sourceTransLang: TranslateLanguage.korean,
       targetTransLang: TranslateLanguage.english,
     );
@@ -38,15 +35,15 @@ class UploadTextsStateProvider extends AutoDisposeNotifier<UploadTextsModel> {
 
   void setState({
     bool? isFinished,
-    bool? isShare,
     TranslateLanguage? sourceTransLang,
     TranslateLanguage? targetTransLang,
+    List<String>? tags,
   }) {
     state = state.copyWith(
       isFinished: isFinished ?? state.isFinished,
-      isShare: isShare ?? state.isShare,
       sourceTransLang: sourceTransLang ?? state.sourceTransLang,
       targetTransLang: targetTransLang ?? state.targetTransLang,
+      tags: tags ?? state.tags,
     );
   }
 
@@ -64,14 +61,46 @@ class UploadTextsStateProvider extends AutoDisposeNotifier<UploadTextsModel> {
             state.sourceTransLang,
             state.targetTransLang,
           );
-          final result = await transUtil.translate(text);
+          final result = await transUtil.translate(text, ref);
           // 최신 입력 기준으로만 반영 (여기선 간단히 바로 반영)
           state.targetController.text = result;
         });
       },
       isShowToast: true,
-      fnName: "fnName",
+      fnName: "upload_texts_state_provider > updateTrans",
     );
+  }
+
+  void setTags({String? tag}) {
+    final asis = List<String>.from(state.tags);
+    if (tag != null) {
+      // 삭제
+      asis.remove(tag);
+    } else {
+      // 등록
+      tag = state.tagController.text.trim();
+      if (GlobalUtil.isEmpty(tag)) {
+        ToastUtil.show(title: "태그 내용을 입력해주세요");
+        state.tagFocus.requestFocus();
+        return;
+      }
+
+      if (asis.contains(tag)) {
+        ToastUtil.show(title: "이미 등록한 태그예요");
+        state.tagFocus.requestFocus();
+        return;
+      }
+      if (asis.length >= 5) {
+        ToastUtil.show(title: "태그는 최대 5개까지만 등록 가능해요");
+        state.tagFocus.requestFocus();
+        return;
+      }
+      asis.add(tag);
+    }
+
+    state.tagController.clear();
+    state.tagFocus.requestFocus();
+    setState(tags: asis);
   }
 }
 

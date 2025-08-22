@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,24 +15,35 @@ class LocalDbStateProvider extends AsyncNotifier<LocalDbModel> {
   @override
   FutureOr<LocalDbModel> build() async {
     _localDbRepo = LocalDbRepo(await SharedPreferences.getInstance());
+    final textsList = _localDbRepo.getStringList(key: LocalDbEnum.texts.name);
     return LocalDbModel(
       texts:
           ModelUtil.fromJson(
             fromJson: TextsModel.fromJson,
-            json: _localDbRepo.getStringList(key: LocalDbEnum.texts.name),
+            json: textsList?.map((item) => jsonDecode(item)).toList(),
           ) ??
           [],
+      downloadedLangPack:
+          _localDbRepo.getStringList(
+            key: LocalDbEnum.downloadedLangPack.name,
+          ) ??
+          ["한국어", "영어"],
+      favoriteList:
+          _localDbRepo.getStringList(key: LocalDbEnum.favoriteList.name) ?? [],
     );
   }
 
   Future<void> setState({
     List<TextsModel>? texts,
     List<String>? downloadedLangPack,
+    List<String>? favoriteList,
   }) async {
     final Map<String, dynamic> fields = {
-      if (texts != null) LocalDbEnum.texts.name: texts,
+      if (texts != null)
+        LocalDbEnum.texts.name: texts.map((item) => jsonEncode(item)).toList(),
       if (downloadedLangPack != null)
         LocalDbEnum.downloadedLangPack.name: downloadedLangPack,
+      if (favoriteList != null) LocalDbEnum.favoriteList.name: favoriteList,
     };
 
     await _setLocalDb(fields: fields);
@@ -41,6 +53,7 @@ class LocalDbStateProvider extends AsyncNotifier<LocalDbModel> {
             texts: texts ?? state.value!.texts,
             downloadedLangPack:
                 downloadedLangPack ?? state.value!.downloadedLangPack,
+            favoriteList: favoriteList ?? state.value!.favoriteList,
           ) ??
           const LocalDbModel(),
     );
@@ -67,6 +80,18 @@ class LocalDbStateProvider extends AsyncNotifier<LocalDbModel> {
     }
 
     await Future.wait(futures);
+  }
+
+  void setFavorite({required String id}) {
+    final asis = List<String>.from(state.value!.favoriteList);
+
+    if (asis.contains(id)) {
+      asis.remove(id);
+    } else {
+      asis.add(id);
+    }
+
+    setState(favoriteList: asis);
   }
 }
 

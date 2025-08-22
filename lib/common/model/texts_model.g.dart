@@ -7,7 +7,7 @@ part of 'texts_model.dart';
 // **************************************************************************
 
 _TextsModel _$TextsModelFromJson(Map<String, dynamic> json) => _TextsModel(
-  id: (json['id'] as num?)?.toInt() ?? -1,
+  id: json['id'] as String? ?? "",
   source: json['source'] as String? ?? "",
   target: json['target'] as String? ?? "",
   sourceLocale: json['sourceLocale'] as String? ?? "",
@@ -15,8 +15,9 @@ _TextsModel _$TextsModelFromJson(Map<String, dynamic> json) => _TextsModel(
   tags:
       (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList() ??
       const [],
-  pitchSpeed: json['pitchSpeed'] as String? ?? "",
   userId: json['userId'] as String? ?? "",
+  pitchSpeed: (json['pitchSpeed'] as num?)?.toDouble() ?? 1,
+  isShare: json['isShare'] as bool? ?? false,
   createdAt: json['created_at'] == null
       ? null
       : DateTime.parse(json['created_at'] as String),
@@ -33,8 +34,9 @@ Map<String, dynamic> _$TextsModelToJson(_TextsModel instance) =>
       'sourceLocale': instance.sourceLocale,
       'targetLocale': instance.targetLocale,
       'tags': instance.tags,
-      'pitchSpeed': instance.pitchSpeed,
       'userId': instance.userId,
+      'pitchSpeed': instance.pitchSpeed,
+      'isShare': instance.isShare,
       'created_at': instance.createdAt?.toIso8601String(),
       'updated_at': instance.updatedAt?.toIso8601String(),
     };

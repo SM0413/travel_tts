@@ -6,14 +6,15 @@ part 'texts_model.g.dart';
 @freezed
 abstract class TextsModel with _$TextsModel {
   const factory TextsModel({
-    @Default(-1) int id,
+    @Default("") String id,
     @Default("") String source,
     @Default("") String target,
     @Default("") String sourceLocale,
     @Default("") String targetLocale,
     @Default([]) List<String> tags,
-    @Default("") String pitchSpeed,
     @Default("") String userId,
+    @Default(1) double pitchSpeed,
+    @Default(false) bool isShare,
     @JsonKey(name: "created_at") DateTime? createdAt,
     @JsonKey(name: "updated_at") DateTime? updatedAt,
   }) = _TextsModel;

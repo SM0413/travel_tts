@@ -9,6 +9,9 @@ enum IconEnum {
   noData(Icon(Icons.inbox_outlined), Icon(Icons.inbox_rounded)),
   text(Icon(Icons.text_snippet_outlined), Icon(Icons.text_snippet_rounded)),
   trans(Icon(Icons.translate_outlined), Icon(Icons.translate_rounded)),
+  play(Icon(Icons.play_arrow_outlined), Icon(Icons.play_arrow_rounded)),
+  pause(Icon(Icons.pause_outlined), Icon(Icons.pause_rounded)),
+  stop(Icon(Icons.stop_outlined), Icon(Icons.stop_rounded)),
   speak(
     Icon(Icons.record_voice_over_outlined),
     Icon(Icons.record_voice_over_rounded),
