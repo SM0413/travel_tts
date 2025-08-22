@@ -9,5 +9,6 @@ abstract class LocalDbModel with _$LocalDbModel {
     @Default([]) List<TextsModel> texts,
     @Default([]) List<String> favoriteList,
     @Default(["한국어", "영어"]) List<String> downloadedLangPack,
+    @Default("") String uid,
   }) = _LocalDbModel; // 올바른 생성자 이름
 }

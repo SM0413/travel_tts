@@ -30,6 +30,7 @@ class LocalDbStateProvider extends AsyncNotifier<LocalDbModel> {
           ["한국어", "영어"],
       favoriteList:
           _localDbRepo.getStringList(key: LocalDbEnum.favoriteList.name) ?? [],
+      uid: _localDbRepo.getString(key: LocalDbEnum.uid.name) ?? "",
     );
   }
 
@@ -37,6 +38,7 @@ class LocalDbStateProvider extends AsyncNotifier<LocalDbModel> {
     List<TextsModel>? texts,
     List<String>? downloadedLangPack,
     List<String>? favoriteList,
+    String? uid,
   }) async {
     final Map<String, dynamic> fields = {
       if (texts != null)
@@ -44,6 +46,7 @@ class LocalDbStateProvider extends AsyncNotifier<LocalDbModel> {
       if (downloadedLangPack != null)
         LocalDbEnum.downloadedLangPack.name: downloadedLangPack,
       if (favoriteList != null) LocalDbEnum.favoriteList.name: favoriteList,
+      if (uid != null) LocalDbEnum.uid.name: uid,
     };
 
     await _setLocalDb(fields: fields);
@@ -54,6 +57,7 @@ class LocalDbStateProvider extends AsyncNotifier<LocalDbModel> {
             downloadedLangPack:
                 downloadedLangPack ?? state.value!.downloadedLangPack,
             favoriteList: favoriteList ?? state.value!.favoriteList,
+            uid: uid ?? state.value!.uid,
           ) ??
           const LocalDbModel(),
     );
