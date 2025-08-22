@@ -12,8 +12,8 @@ class MainPageStateProvider extends Notifier<MainPageModel> {
     );
   }
 
-  void setState({List<TextsModel>? texts}) {
-    state = state.copyWith(texts: texts ?? state.texts);
+  void setState({List<TextsModel>? myTexts}) {
+    state = state.copyWith(myTexts: myTexts ?? state.myTexts);
   }
 
   void empty() {

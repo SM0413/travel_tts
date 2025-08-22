@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MainPageModel {
 
- TextEditingController get searchController; FocusNode get searchFocus; List<TextsModel> get texts;
+ TextEditingController get searchController; FocusNode get searchFocus; List<TextsModel> get myTexts; List<TextsModel> get otherUserTexts;
 /// Create a copy of MainPageModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $MainPageModelCopyWith<MainPageModel> get copyWith => _$MainPageModelCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MainPageModel&&(identical(other.searchController, searchController) || other.searchController == searchController)&&(identical(other.searchFocus, searchFocus) || other.searchFocus == searchFocus)&&const DeepCollectionEquality().equals(other.texts, texts));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MainPageModel&&(identical(other.searchController, searchController) || other.searchController == searchController)&&(identical(other.searchFocus, searchFocus) || other.searchFocus == searchFocus)&&const DeepCollectionEquality().equals(other.myTexts, myTexts)&&const DeepCollectionEquality().equals(other.otherUserTexts, otherUserTexts));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,searchController,searchFocus,const DeepCollectionEquality().hash(texts));
+int get hashCode => Object.hash(runtimeType,searchController,searchFocus,const DeepCollectionEquality().hash(myTexts),const DeepCollectionEquality().hash(otherUserTexts));
 
 @override
 String toString() {
-  return 'MainPageModel(searchController: $searchController, searchFocus: $searchFocus, texts: $texts)';
+  return 'MainPageModel(searchController: $searchController, searchFocus: $searchFocus, myTexts: $myTexts, otherUserTexts: $otherUserTexts)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $MainPageModelCopyWith<$Res>  {
   factory $MainPageModelCopyWith(MainPageModel value, $Res Function(MainPageModel) _then) = _$MainPageModelCopyWithImpl;
 @useResult
 $Res call({
- TextEditingController searchController, FocusNode searchFocus, List<TextsModel> texts
+ TextEditingController searchController, FocusNode searchFocus, List<TextsModel> myTexts, List<TextsModel> otherUserTexts
 });
 
 
@@ -62,11 +62,12 @@ class _$MainPageModelCopyWithImpl<$Res>
 
 /// Create a copy of MainPageModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? searchController = null,Object? searchFocus = null,Object? texts = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? searchController = null,Object? searchFocus = null,Object? myTexts = null,Object? otherUserTexts = null,}) {
   return _then(_self.copyWith(
 searchController: null == searchController ? _self.searchController : searchController // ignore: cast_nullable_to_non_nullable
 as TextEditingController,searchFocus: null == searchFocus ? _self.searchFocus : searchFocus // ignore: cast_nullable_to_non_nullable
-as FocusNode,texts: null == texts ? _self.texts : texts // ignore: cast_nullable_to_non_nullable
+as FocusNode,myTexts: null == myTexts ? _self.myTexts : myTexts // ignore: cast_nullable_to_non_nullable
+as List<TextsModel>,otherUserTexts: null == otherUserTexts ? _self.otherUserTexts : otherUserTexts // ignore: cast_nullable_to_non_nullable
 as List<TextsModel>,
   ));
 }
@@ -152,10 +153,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( TextEditingController searchController,  FocusNode searchFocus,  List<TextsModel> texts)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( TextEditingController searchController,  FocusNode searchFocus,  List<TextsModel> myTexts,  List<TextsModel> otherUserTexts)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MainPageModel() when $default != null:
-return $default(_that.searchController,_that.searchFocus,_that.texts);case _:
+return $default(_that.searchController,_that.searchFocus,_that.myTexts,_that.otherUserTexts);case _:
   return orElse();
 
 }
@@ -173,10 +174,10 @@ return $default(_that.searchController,_that.searchFocus,_that.texts);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( TextEditingController searchController,  FocusNode searchFocus,  List<TextsModel> texts)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( TextEditingController searchController,  FocusNode searchFocus,  List<TextsModel> myTexts,  List<TextsModel> otherUserTexts)  $default,) {final _that = this;
 switch (_that) {
 case _MainPageModel():
-return $default(_that.searchController,_that.searchFocus,_that.texts);case _:
+return $default(_that.searchController,_that.searchFocus,_that.myTexts,_that.otherUserTexts);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -193,10 +194,10 @@ return $default(_that.searchController,_that.searchFocus,_that.texts);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( TextEditingController searchController,  FocusNode searchFocus,  List<TextsModel> texts)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( TextEditingController searchController,  FocusNode searchFocus,  List<TextsModel> myTexts,  List<TextsModel> otherUserTexts)?  $default,) {final _that = this;
 switch (_that) {
 case _MainPageModel() when $default != null:
-return $default(_that.searchController,_that.searchFocus,_that.texts);case _:
+return $default(_that.searchController,_that.searchFocus,_that.myTexts,_that.otherUserTexts);case _:
   return null;
 
 }
@@ -208,16 +209,23 @@ return $default(_that.searchController,_that.searchFocus,_that.texts);case _:
 
 
 class _MainPageModel implements MainPageModel {
-  const _MainPageModel({required this.searchController, required this.searchFocus, final  List<TextsModel> texts = const []}): _texts = texts;
+  const _MainPageModel({required this.searchController, required this.searchFocus, final  List<TextsModel> myTexts = const [], final  List<TextsModel> otherUserTexts = const []}): _myTexts = myTexts,_otherUserTexts = otherUserTexts;
   
 
 @override final  TextEditingController searchController;
 @override final  FocusNode searchFocus;
- final  List<TextsModel> _texts;
-@override@JsonKey() List<TextsModel> get texts {
-  if (_texts is EqualUnmodifiableListView) return _texts;
+ final  List<TextsModel> _myTexts;
+@override@JsonKey() List<TextsModel> get myTexts {
+  if (_myTexts is EqualUnmodifiableListView) return _myTexts;
   // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_texts);
+  return EqualUnmodifiableListView(_myTexts);
+}
+
+ final  List<TextsModel> _otherUserTexts;
+@override@JsonKey() List<TextsModel> get otherUserTexts {
+  if (_otherUserTexts is EqualUnmodifiableListView) return _otherUserTexts;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_otherUserTexts);
 }
 
 
@@ -231,16 +239,16 @@ _$MainPageModelCopyWith<_MainPageModel> get copyWith => __$MainPageModelCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MainPageModel&&(identical(other.searchController, searchController) || other.searchController == searchController)&&(identical(other.searchFocus, searchFocus) || other.searchFocus == searchFocus)&&const DeepCollectionEquality().equals(other._texts, _texts));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MainPageModel&&(identical(other.searchController, searchController) || other.searchController == searchController)&&(identical(other.searchFocus, searchFocus) || other.searchFocus == searchFocus)&&const DeepCollectionEquality().equals(other._myTexts, _myTexts)&&const DeepCollectionEquality().equals(other._otherUserTexts, _otherUserTexts));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,searchController,searchFocus,const DeepCollectionEquality().hash(_texts));
+int get hashCode => Object.hash(runtimeType,searchController,searchFocus,const DeepCollectionEquality().hash(_myTexts),const DeepCollectionEquality().hash(_otherUserTexts));
 
 @override
 String toString() {
-  return 'MainPageModel(searchController: $searchController, searchFocus: $searchFocus, texts: $texts)';
+  return 'MainPageModel(searchController: $searchController, searchFocus: $searchFocus, myTexts: $myTexts, otherUserTexts: $otherUserTexts)';
 }
 
 
@@ -251,7 +259,7 @@ abstract mixin class _$MainPageModelCopyWith<$Res> implements $MainPageModelCopy
   factory _$MainPageModelCopyWith(_MainPageModel value, $Res Function(_MainPageModel) _then) = __$MainPageModelCopyWithImpl;
 @override @useResult
 $Res call({
- TextEditingController searchController, FocusNode searchFocus, List<TextsModel> texts
+ TextEditingController searchController, FocusNode searchFocus, List<TextsModel> myTexts, List<TextsModel> otherUserTexts
 });
 
 
@@ -268,11 +276,12 @@ class __$MainPageModelCopyWithImpl<$Res>
 
 /// Create a copy of MainPageModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? searchController = null,Object? searchFocus = null,Object? texts = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? searchController = null,Object? searchFocus = null,Object? myTexts = null,Object? otherUserTexts = null,}) {
   return _then(_MainPageModel(
 searchController: null == searchController ? _self.searchController : searchController // ignore: cast_nullable_to_non_nullable
 as TextEditingController,searchFocus: null == searchFocus ? _self.searchFocus : searchFocus // ignore: cast_nullable_to_non_nullable
-as FocusNode,texts: null == texts ? _self._texts : texts // ignore: cast_nullable_to_non_nullable
+as FocusNode,myTexts: null == myTexts ? _self._myTexts : myTexts // ignore: cast_nullable_to_non_nullable
+as List<TextsModel>,otherUserTexts: null == otherUserTexts ? _self._otherUserTexts : otherUserTexts // ignore: cast_nullable_to_non_nullable
 as List<TextsModel>,
   ));
 }

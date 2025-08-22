@@ -21,11 +21,18 @@ class MainPageProvider extends AsyncNotifier<void> {
     return await TryCatchUtil.handle(
       fn: () async {
         state = const AsyncLoading();
-        await Future.delayed(const Duration(seconds: 5));
         // 1) 원격 데이터 가져오기
-        final List<TextsModel> remote = await (() async {
+        final List<TextsModel> remoteMyData = await (() async {
           if (!await NetworkUtil.isOnlineNow()) return <TextsModel>[];
-          final res = await _mainPageRepo.getData();
+          final res = await _mainPageRepo.getMyData();
+          if (GlobalUtil.isEmpty(res)) return <TextsModel>[];
+          return ModelUtil.fromJson(fromJson: TextsModel.fromJson, json: res) ??
+              <TextsModel>[];
+        })();
+
+        final List<TextsModel> remoteOtherUserData = await (() async {
+          if (!await NetworkUtil.isOnlineNow()) return <TextsModel>[];
+          final res = await _mainPageRepo.getOtherUserData();
           if (GlobalUtil.isEmpty(res)) return <TextsModel>[];
           return ModelUtil.fromJson(fromJson: TextsModel.fromJson, json: res) ??
               <TextsModel>[];
@@ -36,7 +43,9 @@ class MainPageProvider extends AsyncNotifier<void> {
             ref.read(localDbStateProvider).value?.texts ?? <TextsModel>[];
 
         // 3) id 기준 병합(중복 제거) — 최신 updatedAt 우선 채택
-        final Map<String, TextsModel> byId = {for (final t in remote) t.id: t};
+        final Map<String, TextsModel> byId = {
+          for (final t in remoteMyData) t.id: t,
+        };
         for (final t in localDataList) {
           final exist = byId[t.id];
           if (exist == null) {
@@ -51,12 +60,12 @@ class MainPageProvider extends AsyncNotifier<void> {
                 byId[t.id] = t;
               }
             }
-            // 둘 다 null이면 원격 우선(유지)
           }
         }
 
         final merged = byId.values.toList();
-        ref.read(mainPageStateProvider.notifier).setState(texts: merged);
+        merged.addAll(remoteOtherUserData);
+        ref.read(mainPageStateProvider.notifier).setState(myTexts: merged);
         state = const AsyncData(null);
       },
       isShowToast: true,

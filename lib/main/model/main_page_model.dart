@@ -9,6 +9,6 @@ abstract class MainPageModel with _$MainPageModel {
   const factory MainPageModel({
     required TextEditingController searchController,
     required FocusNode searchFocus,
-    @Default([]) List<TextsModel> texts,
+    @Default([]) List<TextsModel> myTexts,
   }) = _MainPageModel; // 올바른 생성자 이름
 }

@@ -8,10 +8,20 @@ import 'package:travel_tts/utils/global_util.dart';
 class MainPageRepo {
   final _db = FirebaseFirestore.instance;
   final _auth = FirebaseAuth.instance;
-  Future<List<Map<String, dynamic>>> getData() async {
+  Future<List<Map<String, dynamic>>> getMyData() async {
     final res = await _db
         .collection(DbEnum.texts.name)
         .where(TextsEnum.userId.name, isEqualTo: _auth.currentUser?.uid)
+        .get();
+
+    return GlobalUtil.getDocs(res);
+  }
+
+  Future<List<Map<String, dynamic>>> getOtherUserData() async {
+    final res = await _db
+        .collection(DbEnum.texts.name)
+        .where(TextsEnum.isShare.name, isEqualTo: true)
+        .where(TextsEnum.userId.name, isNotEqualTo: _auth.currentUser?.uid)
         .get();
 
     return GlobalUtil.getDocs(res);

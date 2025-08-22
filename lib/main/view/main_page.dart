@@ -44,7 +44,7 @@ class MainPage extends HookConsumerWidget {
     // 검색어/데이터가 바뀔 때만 필터링 재계산 (성능 최적화)
     final sortedItems = useMemoized(() {
       if (GlobalUtil.isEmpty(query)) {
-        return [...state.texts]..sort((a, b) {
+        return [...state.myTexts]..sort((a, b) {
           final aFav = localDbState.favoriteList.contains(a.id);
           final bFav = localDbState.favoriteList.contains(b.id);
           if (aFav == bFav) return 0;
@@ -52,7 +52,7 @@ class MainPage extends HookConsumerWidget {
         });
       }
 
-      final filtered = state.texts
+      final filtered = state.myTexts
           .where(
             (t) =>
                 t.source.toString().toLowerCase().contains(query) ||
@@ -73,7 +73,7 @@ class MainPage extends HookConsumerWidget {
       });
       if (GlobalUtil.isEmpty(filtered)) return [];
       return filtered;
-    }, [query, state.texts, localDbState!.favoriteList]);
+    }, [query, state.myTexts, localDbState!.favoriteList]);
 
     return RefreshIndicator(
       onRefresh: () async {
