@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:travel_tts/utils/error_util.dart';
 import 'package:travel_tts/utils/toast_util.dart';
 
 abstract class TryCatchUtil {
@@ -24,13 +25,13 @@ abstract class TryCatchUtil {
     } catch (e) {
       log(e.toString(), name: "[ HANDLE ERROR ]");
       await failFn?.call(e);
-      // await ErrorUtil.handle(
-      //   e: e,
-      //   isShowToast: isShowToast,
-      //   errorMessage: errorMessage,
-      //   subTitle: subTitle,
-      //   etcInfo: etcInfo,
-      // );
+      await ErrorUtil.handle(
+        e: e,
+        isShowToast: isShowToast,
+        errorMessage: errorMessage,
+        subTitle: subTitle,
+        etcInfo: etcInfo,
+      );
       if (result is bool) {
         result = false as T?;
       }
