@@ -129,6 +129,7 @@ class MainPage extends HookConsumerWidget {
           const SliverPadding(
             padding: EdgeInsetsGeometry.symmetric(vertical: 10),
           ),
+
           SliverGrid.builder(
             itemCount: GlobalUtil.isEmpty(sortedItems) ? 1 : sortedItems.length,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -139,6 +140,7 @@ class MainPage extends HookConsumerWidget {
                   : 2,
               crossAxisSpacing: 10,
               mainAxisSpacing: 20,
+              mainAxisExtent: 200,
             ),
             itemBuilder: (context, index) {
               if (GlobalUtil.isEmpty(sortedItems)) {
@@ -215,36 +217,7 @@ class MainPage extends HookConsumerWidget {
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(height: 6),
-                                  if (text.tags.isNotEmpty)
-                                    Wrap(
-                                      spacing: 6,
-                                      runSpacing: 6,
-                                      children: (text.tags as Iterable)
-                                          .map((e) => e?.toString())
-                                          .where(
-                                            (s) =>
-                                                s != null &&
-                                                s.trim().isNotEmpty,
-                                          )
-                                          .map(
-                                            (s) => Chip(
-                                              label: Text(
-                                                s!,
-                                                style: TextUtil.textTheme(
-                                                  context,
-                                                ).labelSmall,
-                                              ),
-                                              materialTapTargetSize:
-                                                  MaterialTapTargetSize
-                                                      .shrinkWrap,
-                                              visualDensity:
-                                                  VisualDensity.compact,
-                                            ),
-                                          )
-                                          .toList(),
-                                    ),
-                                  const SizedBox(height: 6),
+                                  SizeUtil.basicHPadding(height: 6),
                                   Row(
                                     children: [
                                       const Icon(Icons.speed, size: 18),

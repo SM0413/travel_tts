@@ -10,12 +10,15 @@ import 'package:travel_tts/enums/db/local_db_enum.dart';
 import 'package:travel_tts/utils/model_util.dart';
 
 class LocalDbStateProvider extends AsyncNotifier<LocalDbModel> {
-  late final LocalDbRepo _localDbRepo;
+  // Initialize repo eagerly to avoid LateInitializationError and races
+  final Future<LocalDbRepo> _repoFuture = SharedPreferences.getInstance().then(
+    (prefs) => LocalDbRepo(prefs),
+  );
 
   @override
   FutureOr<LocalDbModel> build() async {
-    _localDbRepo = LocalDbRepo(await SharedPreferences.getInstance());
-    final textsList = _localDbRepo.getStringList(key: LocalDbEnum.texts.name);
+    final repo = await _repoFuture;
+    final textsList = repo.getStringList(key: LocalDbEnum.texts.name);
     return LocalDbModel(
       texts:
           ModelUtil.fromJson(
@@ -24,13 +27,11 @@ class LocalDbStateProvider extends AsyncNotifier<LocalDbModel> {
           ) ??
           [],
       downloadedLangPack:
-          _localDbRepo.getStringList(
-            key: LocalDbEnum.downloadedLangPack.name,
-          ) ??
+          repo.getStringList(key: LocalDbEnum.downloadedLangPack.name) ??
           ["한국어", "영어"],
       favoriteList:
-          _localDbRepo.getStringList(key: LocalDbEnum.favoriteList.name) ?? [],
-      uid: _localDbRepo.getString(key: LocalDbEnum.uid.name) ?? "",
+          repo.getStringList(key: LocalDbEnum.favoriteList.name) ?? [],
+      uid: repo.getString(key: LocalDbEnum.uid.name) ?? "",
     );
   }
 
@@ -51,19 +52,19 @@ class LocalDbStateProvider extends AsyncNotifier<LocalDbModel> {
 
     await _setLocalDb(fields: fields);
 
+    final current = state.value ?? const LocalDbModel();
     state = AsyncData(
-      state.value?.copyWith(
-            texts: texts ?? state.value!.texts,
-            downloadedLangPack:
-                downloadedLangPack ?? state.value!.downloadedLangPack,
-            favoriteList: favoriteList ?? state.value!.favoriteList,
-            uid: uid ?? state.value!.uid,
-          ) ??
-          const LocalDbModel(),
+      current.copyWith(
+        texts: texts ?? current.texts,
+        downloadedLangPack: downloadedLangPack ?? current.downloadedLangPack,
+        favoriteList: favoriteList ?? current.favoriteList,
+        uid: uid ?? current.uid,
+      ),
     );
   }
 
   Future<void> _setLocalDb({required Map<String, dynamic> fields}) async {
+    final repo = await _repoFuture;
     final List<Future<void>> futures = [];
 
     for (final entry in fields.entries) {
@@ -71,23 +72,24 @@ class LocalDbStateProvider extends AsyncNotifier<LocalDbModel> {
       final value = entry.value;
 
       if (value is String) {
-        futures.add(_localDbRepo.setString(key: key, value: value));
+        futures.add(repo.setString(key: key, value: value));
       } else if (value is bool) {
-        futures.add(_localDbRepo.setBool(key: key, value: value));
+        futures.add(repo.setBool(key: key, value: value));
       } else if (value is List<String>) {
-        futures.add(_localDbRepo.setStringList(key: key, value: value));
+        futures.add(repo.setStringList(key: key, value: value));
       } else if (value is int) {
-        futures.add(_localDbRepo.setInt(key: key, value: value));
+        futures.add(repo.setInt(key: key, value: value));
       } else if (value is double) {
-        futures.add(_localDbRepo.setDouble(key: key, value: value));
+        futures.add(repo.setDouble(key: key, value: value));
       }
     }
 
     await Future.wait(futures);
   }
 
-  void setFavorite({required String id}) {
-    final asis = List<String>.from(state.value!.favoriteList);
+  Future<void> setFavorite({required String id}) async {
+    final current = state.value ?? const LocalDbModel();
+    final asis = List<String>.from(current.favoriteList);
 
     if (asis.contains(id)) {
       asis.remove(id);
@@ -95,7 +97,7 @@ class LocalDbStateProvider extends AsyncNotifier<LocalDbModel> {
       asis.add(id);
     }
 
-    setState(favoriteList: asis);
+    await setState(favoriteList: asis);
   }
 }
 

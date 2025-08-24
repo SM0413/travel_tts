@@ -13,7 +13,8 @@ enum IconEnum {
   play(Icon(Icons.play_arrow_outlined), Icon(Icons.play_arrow_rounded)),
   pause(Icon(Icons.pause_outlined), Icon(Icons.pause_rounded)),
   stop(Icon(Icons.stop_outlined), Icon(Icons.stop_rounded)),
-  share(Icon(Icons.share_outlined), Icon(Icons.share_rounded)),
+  share(Icon(Icons.cloud_upload_outlined), Icon(Icons.cloud_upload_rounded)),
+  notShare(Icon(Icons.cloud_off_outlined), Icon(Icons.cloud_off_rounded)),
   checkCircle(
     Icon(Icons.check_circle_outline),
     Icon(Icons.check_circle_rounded),

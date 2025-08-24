@@ -17,10 +17,10 @@ abstract class TtsUtil {
     await _init();
     await _tts.setPitch(1);
     // rate는 0.1 ~ 2.0 사이의 값이어야 함
-    final clamped = speed.clamp(0.5, 2.0);
+    final clamped = speed.clamp(0.1, 2.0);
     double rate = clamped;
     if (Platform.isIOS) {
-      rate = (clamped / 3).clamp(0.0, 1.0);
+      rate = (clamped / 3).clamp(0.1, 2.0);
     }
     await _tts.setSpeechRate(rate);
   }

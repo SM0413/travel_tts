@@ -91,17 +91,109 @@ class MainPageProvider extends AsyncNotifier<void> {
   }
 
   Future<void> share({required TextsModel model}) async {
-    return await TryCatchUtil.handle(
+    return TryCatchUtil.handle(
       fn: () async {
+        // 온라인 여부 먼저
         if (!await NetworkUtil.isOnlineNow(isShowToast: true)) return;
+
+        // 현 로컬 상태 가져오기 (로딩/널 가드)
+        final localDb = ref.read(localDbStateProvider).value;
+        if (localDb == null) {
+          ToastUtil.show(title: "데이터 로딩 중입니다");
+          return;
+        }
+
+        // 복사본 생성
+        final localDbTexts = List<TextsModel>.from(localDb.texts);
+        final mainPageTexts = List<TextsModel>.from(
+          ref.read(mainPageStateProvider).myTexts,
+        );
+
+        // ❗️indexOf 대신 id 기반 탐색
+        final localTextIdx = localDbTexts.indexWhere((t) => t.id == model.id);
+        final mainPageTextIdx = mainPageTexts.indexWhere(
+          (t) => t.id == model.id,
+        );
+        if (localTextIdx == -1 || mainPageTextIdx == -1) {
+          ToastUtil.show(title: "항목을 찾지 못했어요");
+          return;
+        }
+
+        // 토글 상태 생성 (옵티미스틱)
+        final next = model.copyWith(isShare: !model.isShare);
+
         await ToastUtil.loading(() async {
-          await _mainPageRepo.uploadTexts(data: model.toJson());
-          ToastUtil.show(title: "공유에 성공했어요");
+          // 1) 낙관적 로컬 반영
+          localDbTexts[localTextIdx] = next;
+          mainPageTexts[mainPageTextIdx] = next;
+          await ref
+              .read(localDbStateProvider.notifier)
+              .setState(texts: localDbTexts);
+          ref
+              .read(mainPageStateProvider.notifier)
+              .setState(myTexts: mainPageTexts);
+
+          try {
+            // 2) 서버 반영
+            if (next.isShare) {
+              await _mainPageRepo.uploadTexts(data: next.toJson());
+              ToastUtil.show(title: "공유에 성공했어요");
+            } else {
+              // deleteTexts가 id만 필요하면 id만 넘기도록 변경 권장
+              await _mainPageRepo.deleteTexts(model: next);
+              ToastUtil.show(title: "공유 중단에 성공했어요");
+            }
+          } catch (e) {
+            // 3) 실패 시 롤백
+            localDbTexts[localTextIdx] = model;
+            mainPageTexts[mainPageTextIdx] = model;
+            await ref
+                .read(localDbStateProvider.notifier)
+                .setState(texts: localDbTexts);
+            ref
+                .read(mainPageStateProvider.notifier)
+                .setState(myTexts: mainPageTexts);
+            rethrow;
+          }
         });
       },
       isShowToast: true,
       fnName: "main_page_provider > share",
-      errorMessage: "공유에 실패했어요",
+      errorMessage: "실패했어요",
+      isNeedCloseLoading: true,
+    );
+  }
+
+  Future<void> deleteText({required TextsModel model}) async {
+    return await TryCatchUtil.handle(
+      fn: () async {
+        await ToastUtil.loading(() async {
+          if (model.isShare) {
+            if (!await NetworkUtil.isOnlineNow(isShowToast: false)) {
+              ToastUtil.show(title: "공유된 정보는 인터넷이 연결된 상태에서만 삭제 가능해요");
+              return;
+            }
+            await _mainPageRepo.deleteTexts(model: model);
+          }
+          final mainPageTexts = List<TextsModel>.from(
+            ref.read(mainPageStateProvider).myTexts,
+          );
+          mainPageTexts.remove(model);
+          ref
+              .read(mainPageStateProvider.notifier)
+              .setState(myTexts: mainPageTexts);
+          final localDbTexts = List<TextsModel>.from(
+            ref.read(localDbStateProvider).value!.texts,
+          );
+          localDbTexts.remove(model);
+          await ref
+              .read(localDbStateProvider.notifier)
+              .setState(texts: localDbTexts);
+        });
+      },
+      isShowToast: true,
+      fnName: "main_page_provider > deleteText",
+      errorMessage: "실패했어요",
     );
   }
 }

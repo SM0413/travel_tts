@@ -33,9 +33,15 @@ abstract class RouterUtil {
   }
 
   /// 현재 페이지 닫기
-  static void pop(BuildContext context) {
-    if (context.mounted && context.canPop()) {
-      context.pop();
+  static void pop(BuildContext context, {bool isNavigator = false}) {
+    if (isNavigator) {
+      if (context.mounted && Navigator.canPop(context)) {
+        Navigator.pop(context);
+      }
+    } else {
+      if (context.mounted && context.canPop()) {
+        context.pop();
+      }
     }
   }
 

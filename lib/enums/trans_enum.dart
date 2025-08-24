@@ -5,7 +5,7 @@ enum TransEnum {
   galician("갈리시아어", TranslateLanguage.galician, "gl-ES"),
 
   ///구자라트어
-  gujarati("구자라트어", TranslateLanguage.gujarati, "gu-IN"),
+  gujarati("구자라트어", TranslateLanguage.gujarati, "gu"),
 
   ///그리스어
   greek("그리스어", TranslateLanguage.greek, "el-GR"),

@@ -8,6 +8,7 @@ import 'package:travel_tts/common/view/widgets/common_inkwell_widget.dart';
 import 'package:travel_tts/common/view/widgets/common_scaffold_widget.dart';
 import 'package:travel_tts/common/view/widgets/common_submit_widget.dart';
 import 'package:travel_tts/common/view/widgets/common_text_widget.dart';
+import 'package:travel_tts/constructs/trans_const.dart';
 import 'package:travel_tts/enums/db/texts_enum.dart';
 import 'package:travel_tts/enums/icon_enum.dart';
 import 'package:travel_tts/enums/router_enum.dart';
@@ -292,6 +293,7 @@ class UploadTextsMainPage extends HookConsumerWidget {
                                                     state.targetTransLang,
                                               ),
                                         );
+                                        if (!context.mounted) return;
                                         isNowSpeak.value = false;
                                       }
                                     },
@@ -319,9 +321,9 @@ class UploadTextsMainPage extends HookConsumerWidget {
                       key: state.pitchSpeedKey,
                       name: TextsEnum.pitchSpeed.name,
                       initialValue: 1,
-                      min: 0.1,
-                      max: 2,
-                      divisions: ((2 - 0.1) / 0.1).round(),
+                      min: TransConst.minRate,
+                      max: TransConst.maxRate,
+                      divisions: TransConst.divisions,
                       decoration: const InputDecoration(
                         labelText: "속도 조절",
                         helperText: "0.1 단위로 조절할 수 있어요",
@@ -403,7 +405,21 @@ class UploadTextsMainPage extends HookConsumerWidget {
         text: "등록",
         bgColor: ColorUtil.primary,
         onTap: () async {
-          await ref.read(uploadTextsProvider.notifier).upload();
+          isNowSpeak.value = false;
+          await TtsUtil.stop();
+          final sourceText = state.sourceController.text.trim();
+          if (GlobalUtil.isEmpty(sourceText)) {
+            ToastUtil.show(title: "번역할 내용을 적어주세요");
+            state.sourceFocus.requestFocus();
+            state.targetController.clear();
+            return;
+          }
+          await stateNotifier.updateTrans();
+          await ref.read(uploadTextsProvider.notifier).upload().then((value) {
+            if (value) {
+              RouterUtil.go(context: context, routeEnum: RouterEnum.navigation);
+            }
+          });
         },
       ),
     );

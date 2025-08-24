@@ -21,7 +21,7 @@ class InitProvider extends AutoDisposeAsyncNotifier<void> {
   Future<void> init() async {
     await TryCatchUtil.handle(
       fn: () async {
-        if (GlobalUtil.isEmpty(ref.read(localDbStateProvider).value!.uid)) {
+        if (GlobalUtil.isEmpty(ref.read(localDbStateProvider).value?.uid)) {
           await ref
               .read(localDbStateProvider.notifier)
               .setState(uid: StringUtil.getUUID());
