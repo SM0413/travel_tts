@@ -4,11 +4,14 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:travel_tts/common/model/texts_model.dart';
 import 'package:travel_tts/common/provider/local_db_state_provider.dart';
+import 'package:travel_tts/common/provider/user_state_provider.dart';
 import 'package:travel_tts/common/view/widgets/common_inkwell_widget.dart';
 import 'package:travel_tts/common/view/widgets/common_text_widget.dart';
 import 'package:travel_tts/enums/db/texts_enum.dart';
 import 'package:travel_tts/enums/icon_enum.dart';
 import 'package:travel_tts/enums/trans_enum.dart';
+import 'package:travel_tts/main/provider/main_page_provider.dart';
+import 'package:travel_tts/utils/alert_util.dart';
 import 'package:travel_tts/utils/color_util.dart';
 import 'package:travel_tts/utils/global_util.dart';
 import 'package:travel_tts/utils/router_util.dart';
@@ -27,7 +30,7 @@ class TextsInfoBottomSheet extends HookConsumerWidget {
     final speedKey = GlobalUtil.createGlobalKey<FormBuilderFieldState>();
     final transStr = useState<String>("");
     final isPlay = useState<bool>(false);
-
+    final isMy = state.userId == ref.watch(userStateProvider).id;
     useEffect(() {
       RouterUtil.waitBuild(
         fn: () {
@@ -171,27 +174,50 @@ class TextsInfoBottomSheet extends HookConsumerWidget {
                     }
                   }
                 },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  decoration: BoxDecoration(
-                    borderRadius: SizeUtil.basicRadius(),
-                    color: ColorUtil.withOpacity(
-                      color: ColorUtil.primary,
-                      opacity: 15,
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      isPlay.value
-                          ? IconEnum.stop.rounded
-                          : IconEnum.play.rounded,
-                      CommonTextWidget(
-                        isPlay.value ? "정지" : "재생",
-                        isBold: true,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        decoration: BoxDecoration(
+                          borderRadius: SizeUtil.basicRadius(),
+                          color: ColorUtil.withOpacity(
+                            color: ColorUtil.primary,
+                            opacity: 15,
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            isPlay.value
+                                ? IconEnum.stop.rounded
+                                : IconEnum.play.rounded,
+                            CommonTextWidget(
+                              isPlay.value ? "정지" : "재생",
+                              isBold: true,
+                            ),
+                          ],
+                        ),
                       ),
-                    ],
-                  ),
+                    ),
+                    Visibility(
+                      visible: isMy,
+                      child: IconButton(
+                        onPressed: () async {
+                          await AlertUtil.show(
+                            context: context,
+                            title: "해당 번역을 다른 유저와 공유 하시겠어요?",
+                            confirmFn: () async {
+                              await ref
+                                  .read(mainPageProvider.notifier)
+                                  .share(model: state);
+                            },
+                          );
+                        },
+                        icon: IconEnum.share.rounded,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               SizeUtil.basicHPadding(),

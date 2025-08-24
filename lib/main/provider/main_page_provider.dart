@@ -8,6 +8,7 @@ import 'package:travel_tts/main/repo/main_page_repo.dart';
 import 'package:travel_tts/utils/global_util.dart';
 import 'package:travel_tts/utils/model_util.dart';
 import 'package:travel_tts/utils/network_util.dart';
+import 'package:travel_tts/utils/toast_util.dart';
 import 'package:travel_tts/utils/try_catch_util.dart';
 
 class MainPageProvider extends AsyncNotifier<void> {
@@ -86,6 +87,21 @@ class MainPageProvider extends AsyncNotifier<void> {
       },
       isShowToast: true,
       fnName: "main_page_provider > getData",
+    );
+  }
+
+  Future<void> share({required TextsModel model}) async {
+    return await TryCatchUtil.handle(
+      fn: () async {
+        if (!await NetworkUtil.isOnlineNow(isShowToast: true)) return;
+        await ToastUtil.loading(() async {
+          await _mainPageRepo.uploadTexts(data: model.toJson());
+          ToastUtil.show(title: "공유에 성공했어요");
+        });
+      },
+      isShowToast: true,
+      fnName: "main_page_provider > share",
+      errorMessage: "공유에 실패했어요",
     );
   }
 }

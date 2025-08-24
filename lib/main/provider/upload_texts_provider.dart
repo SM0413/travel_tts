@@ -51,7 +51,7 @@ class UploadTextsProvider extends AutoDisposeAsyncNotifier<void> {
         }
 
         if (isShare && await NetworkUtil.isOnlineNow()) {
-          data = await _mainPageRepo.upload(data: data) ?? data;
+          data = await _mainPageRepo.uploadTexts(data: data) ?? data;
         }
 
         ref

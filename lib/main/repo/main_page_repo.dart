@@ -27,7 +27,7 @@ class MainPageRepo {
     return GlobalUtil.getDocs(res);
   }
 
-  Future<Map<String, dynamic>?> upload({
+  Future<Map<String, dynamic>?> uploadTexts({
     required Map<String, dynamic> data,
   }) async {
     await _db
