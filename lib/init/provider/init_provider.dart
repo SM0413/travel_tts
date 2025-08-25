@@ -21,34 +21,73 @@ class InitProvider extends AutoDisposeAsyncNotifier<void> {
   Future<void> init() async {
     await TryCatchUtil.handle(
       fn: () async {
-        if (GlobalUtil.isEmpty(ref.read(localDbStateProvider).value?.uid)) {
-          await ref
-              .read(localDbStateProvider.notifier)
-              .setState(uid: StringUtil.getUUID());
-        }
-        String uid = ref.read(localDbStateProvider).value!.uid;
-        Map<String, dynamic>? userRes;
-        if (await NetworkUtil.isOnlineNow()) {
-          final auth = FirebaseAuth.instance;
-          await auth.signInAnonymously();
-
-          final db = FirebaseFirestore.instance;
-          uid = auth.currentUser?.uid ?? uid;
+        // 1) 로컬 UID 확보(없으면 생성)
+        final localState = ref.read(localDbStateProvider);
+        String uid = localState.value?.uid ?? '';
+        if (GlobalUtil.isEmpty(uid)) {
+          uid = StringUtil.getUUID();
           await ref.read(localDbStateProvider.notifier).setState(uid: uid);
-          userRes = GlobalUtil.getSingleDoc(
-            await db.collection(DbEnum.users.name).doc(uid).get(),
-          );
-          if (GlobalUtil.isEmpty(userRes)) {
-            userRes = ToJsonUtil.users(name: uid);
-            await db.collection(DbEnum.users.name).doc(uid).set(userRes);
+        }
+
+        Map<String, dynamic>? userRes;
+        final bool online = await NetworkUtil.isOnlineNow();
+
+        if (online) {
+          // 2) Firebase Auth: 이미 로그인돼 있으면 재로그인 불필요
+          final auth = FirebaseAuth.instance;
+          if (auth.currentUser == null) {
+            try {
+              // 네트워크 지연 대비 타임아웃
+              await auth.signInAnonymously().timeout(
+                const Duration(seconds: 10),
+              );
+            } catch (_) {
+              // 로그인 실패 시에도 오프라인 플로우로 계속 진행
+            }
+          }
+
+          // 로그인에 성공했다면 서버 UID로 교체
+          final current = auth.currentUser;
+          if (current != null && !GlobalUtil.isEmpty(current.uid)) {
+            uid = current.uid;
+            await ref.read(localDbStateProvider.notifier).setState(uid: uid);
+          }
+
+          // 3) Firestore 사용자 문서 조회/생성
+          try {
+            final db = FirebaseFirestore.instance;
+            final docRef = db.collection(DbEnum.users.name).doc(uid);
+            final snap = await docRef.get();
+
+            if (snap.exists) {
+              userRes = GlobalUtil.getSingleDoc(snap);
+            } else {
+              // 최초 생성: 서버 타임스탬프와 함께 기록
+              userRes = ToJsonUtil.users(name: uid);
+              userRes[UsersEnum.createdAt.name] = FieldValue.serverTimestamp();
+              userRes[UsersEnum.updatedAt.name] = FieldValue.serverTimestamp();
+              await docRef.set(userRes, SetOptions(merge: true));
+
+              // set 이후에는 로컬에서 즉시 사용할 수 있게 값 보정
+              userRes[UsersEnum.createdAt.name] = DateTime.now()
+                  .toIso8601String();
+              userRes[UsersEnum.updatedAt.name] = DateTime.now()
+                  .toIso8601String();
+            }
+          } catch (_) {
+            // Firestore 에러 시에도 로컬 플로우로 계속 진행
           }
         }
-        userRes ??= {};
+
+        // 4) 오프라인/실패 대비 기본 값 보강
+        userRes ??= <String, dynamic>{};
         userRes[UsersEnum.id.name] = uid;
-        ref.read(localDbStateProvider);
+
+        // 5) 최종 사용자 상태 반영
         ref
             .read(userStateProvider.notifier)
             .setModel(UsersModel.fromJson(userRes));
+        state = const AsyncData(null);
       },
       isShowToast: true,
       fnName: "init_provider > init",
