@@ -36,8 +36,8 @@ class TextsInfoBottomSheet extends HookConsumerWidget {
     useEffect(() {
       RouterUtil.waitBuild(
         fn: () {
-          transStr.value = model.value.target;
           model.value = state;
+          transStr.value = state.target;
         },
       );
       return () {

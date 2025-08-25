@@ -1,4 +1,4 @@
-package com.example.travel_tts
+package com.travel.tts
 
 import io.flutter.embedding.android.FlutterActivity
 

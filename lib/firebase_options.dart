@@ -58,7 +58,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDIgADNCiIlf86UiBFCxqPVCu1dW7mEDh8',
-    appId: '1:877151868324:android:fa31833e089f56f03b5d31',
+    appId: '1:877151868324:android:d8412d7ff4d08d7b3b5d31',
     messagingSenderId: '877151868324',
     projectId: 'travel-tts',
     storageBucket: 'travel-tts.firebasestorage.app',
@@ -66,11 +66,11 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyCFLF9CSo1pcJ-XviKmAG3iFOZoegUkRoI',
-    appId: '1:877151868324:ios:432ca98c3de783b03b5d31',
+    appId: '1:877151868324:ios:f16ed4e601d9cac63b5d31',
     messagingSenderId: '877151868324',
     projectId: 'travel-tts',
     storageBucket: 'travel-tts.firebasestorage.app',
-    iosBundleId: 'com.example.travelTts',
+    iosBundleId: 'com.travel.tts',
   );
 
 }

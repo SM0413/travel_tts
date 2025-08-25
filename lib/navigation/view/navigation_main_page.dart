@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:travel_tts/common/view/ad_mob_banner.dart';
 import 'package:travel_tts/enums/navigation_enum.dart';
 import 'package:travel_tts/navigation/provider/navigation_state_provider.dart';
 
@@ -27,8 +26,8 @@ class NavigationMainPage extends HookConsumerWidget {
         bottomNavigationBar: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const AdMobBanner(),
-            const SizedBox(height: 4),
+            // const AdMobBanner(),
+            // const SizedBox(height: 4),
             BottomNavigationBar(
               currentIndex: state.selectedIndex,
               showSelectedLabels: true,

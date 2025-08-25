@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:877151868324:android:fa31833e089f56f03b5d31",
+        "mobilesdk_app_id": "1:877151868324:android:d8412d7ff4d08d7b3b5d31",
         "android_client_info": {
-          "package_name": "com.example.travel_tts"
+          "package_name": "com.travel.tts"
         }
       },
       "oauth_client": [],
