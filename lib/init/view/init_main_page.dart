@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:travel_tts/common/view/widgets/common_scaffold_widget.dart';
+import 'package:travel_tts/constructs/img_const.dart';
 import 'package:travel_tts/enums/router_enum.dart';
 import 'package:travel_tts/init/provider/init_provider.dart';
 import 'package:travel_tts/utils/router_util.dart';
@@ -20,8 +21,8 @@ class InitMainPage extends HookConsumerWidget {
       );
       return null;
     }, []);
-    return const CommonScaffoldWidget(
-      body: Center(child: CircularProgressIndicator.adaptive()),
+    return CommonScaffoldWidget(
+      body: Center(child: Image.asset(ImgConst.appIcon)),
     );
   }
 }
