@@ -15,12 +15,14 @@ abstract class ErrorUtil {
   static Future<void> handle({
     required dynamic e,
     required bool isShowToast,
+    required String userId,
     String? errorMessage,
     String? subTitle,
     String? etcInfo,
   }) async {
     try {
       final data = ToJsonUtil.errorLog(
+        userId: userId,
         e: e ?? "",
         stackTrace: StackTrace.current,
         deviceInfo: await DeviceInfoUtil.getDeviceInfo(),

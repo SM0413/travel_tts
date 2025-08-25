@@ -1,13 +1,19 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:travel_tts/common/model/texts_model.dart';
 import 'package:travel_tts/common/provider/local_db_state_provider.dart';
+import 'package:travel_tts/common/provider/user_state_provider.dart';
+import 'package:travel_tts/enums/db/db_enum.dart';
 import 'package:travel_tts/main/provider/main_page_state_provider.dart';
 import 'package:travel_tts/main/repo/main_page_repo.dart';
+import 'package:travel_tts/utils/device_info_util.dart';
 import 'package:travel_tts/utils/global_util.dart';
 import 'package:travel_tts/utils/model_util.dart';
 import 'package:travel_tts/utils/network_util.dart';
+import 'package:travel_tts/utils/string_util.dart';
+import 'package:travel_tts/utils/to_json_util.dart';
 import 'package:travel_tts/utils/toast_util.dart';
 import 'package:travel_tts/utils/try_catch_util.dart';
 
@@ -87,6 +93,35 @@ class MainPageProvider extends AutoDisposeAsyncNotifier<void> {
       },
       isShowToast: true,
       fnName: "main_page_provider > getData",
+      userId: ref.read(userStateProvider).id,
+      failFn: (e) async {
+        if (!await NetworkUtil.isOnlineNow()) {
+          await ref
+              .read(localDbStateProvider.notifier)
+              .setErrorList(
+                data: ToJsonUtil.errorLog(
+                  userId: ref.read(userStateProvider).id,
+                  e: e,
+                  stackTrace: StackTrace.current,
+                  deviceInfo: await DeviceInfoUtil.getDeviceInfo(),
+                ),
+              );
+        } else {
+          final errorList = ref.read(localDbStateProvider).value!.errorList;
+          if (!GlobalUtil.isEmpty(errorList)) {
+            final List<Future> uploadFUture = errorList.map((item) {
+              return FirebaseFirestore.instance
+                  .collection(DbEnum.errorLog.name)
+                  .doc(StringUtil.getUUID())
+                  .set(item);
+            }).toList();
+            await Future.wait(uploadFUture);
+            await ref
+                .read(localDbStateProvider.notifier)
+                .setState(errorList: []);
+          }
+        }
+      },
     );
   }
 
@@ -161,6 +196,35 @@ class MainPageProvider extends AutoDisposeAsyncNotifier<void> {
       fnName: "main_page_provider > share",
       errorMessage: "실패했어요",
       isNeedCloseLoading: true,
+      userId: ref.read(userStateProvider).id,
+      failFn: (e) async {
+        if (!await NetworkUtil.isOnlineNow()) {
+          await ref
+              .read(localDbStateProvider.notifier)
+              .setErrorList(
+                data: ToJsonUtil.errorLog(
+                  userId: ref.read(userStateProvider).id,
+                  e: e,
+                  stackTrace: StackTrace.current,
+                  deviceInfo: await DeviceInfoUtil.getDeviceInfo(),
+                ),
+              );
+        } else {
+          final errorList = ref.read(localDbStateProvider).value!.errorList;
+          if (!GlobalUtil.isEmpty(errorList)) {
+            final List<Future> uploadFUture = errorList.map((item) {
+              return FirebaseFirestore.instance
+                  .collection(DbEnum.errorLog.name)
+                  .doc(StringUtil.getUUID())
+                  .set(item);
+            }).toList();
+            await Future.wait(uploadFUture);
+            await ref
+                .read(localDbStateProvider.notifier)
+                .setState(errorList: []);
+          }
+        }
+      },
     );
   }
 
@@ -194,6 +258,35 @@ class MainPageProvider extends AutoDisposeAsyncNotifier<void> {
       isShowToast: true,
       fnName: "main_page_provider > deleteText",
       errorMessage: "실패했어요",
+      userId: ref.read(userStateProvider).id,
+      failFn: (e) async {
+        if (!await NetworkUtil.isOnlineNow()) {
+          await ref
+              .read(localDbStateProvider.notifier)
+              .setErrorList(
+                data: ToJsonUtil.errorLog(
+                  userId: ref.read(userStateProvider).id,
+                  e: e,
+                  stackTrace: StackTrace.current,
+                  deviceInfo: await DeviceInfoUtil.getDeviceInfo(),
+                ),
+              );
+        } else {
+          final errorList = ref.read(localDbStateProvider).value!.errorList;
+          if (!GlobalUtil.isEmpty(errorList)) {
+            final List<Future> uploadFUture = errorList.map((item) {
+              return FirebaseFirestore.instance
+                  .collection(DbEnum.errorLog.name)
+                  .doc(StringUtil.getUUID())
+                  .set(item);
+            }).toList();
+            await Future.wait(uploadFUture);
+            await ref
+                .read(localDbStateProvider.notifier)
+                .setState(errorList: []);
+          }
+        }
+      },
     );
   }
 }

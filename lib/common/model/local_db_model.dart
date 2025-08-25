@@ -8,6 +8,7 @@ abstract class LocalDbModel with _$LocalDbModel {
   const factory LocalDbModel({
     @Default([]) List<TextsModel> texts,
     @Default([]) List<String> favoriteList,
+    @Default([]) List<Map<String, dynamic>> errorList,
     @Default(["한국어", "영어"]) List<String> downloadedLangPack,
     @Default("") String uid,
   }) = _LocalDbModel; // 올바른 생성자 이름

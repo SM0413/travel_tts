@@ -49,6 +49,7 @@ abstract class PermissionUtil {
           isShowToast: isShowToast,
           errorMessage: "권한 확인에 실패했어요",
           fnName: "permission_util > requestPermission",
+          userId: "permissionError",
         ) ??
         false;
   }

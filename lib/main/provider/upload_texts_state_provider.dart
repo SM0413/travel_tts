@@ -1,9 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mlkit_translation/google_mlkit_translation.dart';
+import 'package:travel_tts/common/provider/local_db_state_provider.dart';
+import 'package:travel_tts/common/provider/user_state_provider.dart';
+import 'package:travel_tts/enums/db/db_enum.dart';
 import 'package:travel_tts/main/model/upload_texts_model.dart';
+import 'package:travel_tts/utils/device_info_util.dart';
 import 'package:travel_tts/utils/global_util.dart';
+import 'package:travel_tts/utils/network_util.dart';
+import 'package:travel_tts/utils/string_util.dart';
+import 'package:travel_tts/utils/to_json_util.dart';
 import 'package:travel_tts/utils/toast_util.dart';
 import 'package:travel_tts/utils/trans_util.dart';
 import 'package:travel_tts/utils/try_catch_util.dart';
@@ -68,6 +76,35 @@ class UploadTextsStateProvider extends AutoDisposeNotifier<UploadTextsModel> {
       },
       isShowToast: true,
       fnName: "upload_texts_state_provider > updateTrans",
+      userId: ref.read(userStateProvider).id,
+      failFn: (e) async {
+        if (!await NetworkUtil.isOnlineNow()) {
+          await ref
+              .read(localDbStateProvider.notifier)
+              .setErrorList(
+                data: ToJsonUtil.errorLog(
+                  userId: ref.read(userStateProvider).id,
+                  e: e,
+                  stackTrace: StackTrace.current,
+                  deviceInfo: await DeviceInfoUtil.getDeviceInfo(),
+                ),
+              );
+        } else {
+          final errorList = ref.read(localDbStateProvider).value!.errorList;
+          if (!GlobalUtil.isEmpty(errorList)) {
+            final List<Future> uploadFUture = errorList.map((item) {
+              return FirebaseFirestore.instance
+                  .collection(DbEnum.errorLog.name)
+                  .doc(StringUtil.getUUID())
+                  .set(item);
+            }).toList();
+            await Future.wait(uploadFUture);
+            await ref
+                .read(localDbStateProvider.notifier)
+                .setState(errorList: []);
+          }
+        }
+      },
     );
   }
 

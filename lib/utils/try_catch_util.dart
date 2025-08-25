@@ -12,6 +12,7 @@ abstract class TryCatchUtil {
     Function()? finallyFn,
     required bool isShowToast,
     required String fnName,
+    required String userId,
     String errorMessage = "정보를 가져오지 못했어요",
     bool isNeedCloseLoading = false,
     String? subTitle,
@@ -26,6 +27,7 @@ abstract class TryCatchUtil {
       log(e.toString(), name: "[ HANDLE ERROR ]");
       await failFn?.call(e);
       await ErrorUtil.handle(
+        userId: userId,
         e: e,
         isShowToast: isShowToast,
         errorMessage: errorMessage,
