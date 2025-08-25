@@ -31,6 +31,11 @@ class MainPage extends HookConsumerWidget {
     final localDbState = ref.watch(localDbStateProvider).value;
     final isLoading = ref.watch(mainPageProvider).isLoading;
     final playId = useState<String?>(null);
+    final userId = ref.watch(userStateProvider).id;
+    final favoriteSet = useMemoized(
+      () => (localDbState?.favoriteList ?? const <String>[]).toSet(),
+      [localDbState?.favoriteList],
+    );
     useListenable(state.searchController); // 검색어 변경 시 위젯 리빌드 트리거
 
     final query = state.searchController.text.trim().toLowerCase();
@@ -130,195 +135,202 @@ class MainPage extends HookConsumerWidget {
             padding: EdgeInsetsGeometry.symmetric(vertical: 10),
           ),
 
-          SliverGrid.builder(
-            itemCount: GlobalUtil.isEmpty(sortedItems) ? 1 : sortedItems.length,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: GlobalUtil.isEmpty(sortedItems)
-                  ? 1
-                  : MediaQuery.of(context).size.width > 900
-                  ? 3
-                  : 2,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 20,
-              mainAxisExtent: 200,
+          if (GlobalUtil.isEmpty(sortedItems))
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : const CommonNoDataWidget(),
             ),
-            itemBuilder: (context, index) {
-              if (GlobalUtil.isEmpty(sortedItems)) {
-                if (isLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                return const CommonNoDataWidget();
-              }
-              final text = sortedItems[index];
-              final isPlay = playId.value == text.id;
-              final isMyText = text.userId == ref.watch(userStateProvider).id;
-              final isFavorite = ref
-                  .watch(localDbStateProvider)
-                  .value!
-                  .favoriteList
-                  .contains(text.id);
-              return Skeletonizer(
-                enabled: isLoading,
-                child: CommonInkwellWidget(
-                  tooltip: "상세페이지",
-                  onTap: () async {
-                    await TtsUtil.stop();
-                    await showModalBottomSheet(
-                      context: context,
-                      isScrollControlled: true,
-                      useSafeArea: true,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(16),
+
+          if (!GlobalUtil.isEmpty(sortedItems))
+            SliverGrid.builder(
+              itemCount: sortedItems.length,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: MediaQuery.of(context).size.width > 900 ? 3 : 2,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 20,
+                mainAxisExtent: 200,
+              ),
+              itemBuilder: (context, index) {
+                final text = sortedItems[index];
+                final isPlay = playId.value == text.id;
+                final isMyText = text.userId == userId;
+                final isFavorite = favoriteSet.contains(text.id);
+                return Skeletonizer(
+                  enabled: isLoading,
+                  child: CommonInkwellWidget(
+                    tooltip: "상세페이지",
+                    onTap: () async {
+                      await TtsUtil.stop();
+                      await showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        useSafeArea: true,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(16),
+                          ),
                         ),
-                      ),
-                      builder: (ctx) {
-                        return TextsInfoBottomSheet(state: text);
-                      },
-                    );
-                  },
-                  child: Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      Card(
-                        child: Column(
-                          children: [
-                            ListTile(
-                              title: CommonTextWidget(
-                                text.source,
-                                maxLines: 1,
-                                style: TextUtil.textTheme(context).bodyLarge,
-                                isBold: true,
+                        builder: (ctx) {
+                          return TextsInfoBottomSheet(state: text);
+                        },
+                      );
+                    },
+                    child: Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        Card(
+                          child: Column(
+                            children: [
+                              ListTile(
+                                title: CommonTextWidget(
+                                  text.source,
+                                  maxLines: 1,
+                                  style: TextUtil.textTheme(context).bodyLarge,
+                                  isBold: true,
+                                ),
+                                subtitle: CommonTextWidget(
+                                  text.target,
+                                  maxLines: 1,
+                                  style: TextUtil.textTheme(context).bodyMedium,
+                                ),
+                                trailing: null,
                               ),
-                              subtitle: CommonTextWidget(
-                                text.target,
-                                maxLines: 1,
-                                style: TextUtil.textTheme(context).bodyMedium,
-                              ),
-                              trailing: null,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      const Icon(Icons.translate, size: 18),
-                                      const SizedBox(width: 6),
-                                      Flexible(
-                                        child: CommonTextWidget(
-                                          '${text.sourceLocale} → ${text.targetLocale}',
-                                          maxLines: 1,
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(
+                                  16,
+                                  0,
+                                  16,
+                                  8,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        const Icon(Icons.translate, size: 18),
+                                        const SizedBox(width: 6),
+                                        Flexible(
+                                          child: CommonTextWidget(
+                                            '${text.sourceLocale} → ${text.targetLocale}',
+                                            maxLines: 1,
+                                            style: TextUtil.textTheme(
+                                              context,
+                                            ).labelLarge,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizeUtil.basicHPadding(height: 6),
+                                    Row(
+                                      children: [
+                                        const Icon(Icons.speed, size: 18),
+                                        const SizedBox(width: 6),
+                                        CommonTextWidget(
+                                          '속도: ${((text.pitchSpeed) as num).toDouble().toStringAsFixed(1)}x',
                                           style: TextUtil.textTheme(
                                             context,
                                           ).labelLarge,
                                         ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  CommonInkwellWidget(
+                                    tooltip: "번역 음성 ${isPlay ? "정지" : "재생"}",
+                                    onTap: () async {
+                                      if (isPlay) {
+                                        playId.value = null;
+                                        await TtsUtil.stop();
+                                      } else {
+                                        if (playId.value != null) {
+                                          await TtsUtil.stop();
+                                          await Future.delayed(
+                                            const Duration(milliseconds: 200),
+                                          );
+                                        }
+                                        playId.value = text.id;
+                                        await TtsUtil.play(
+                                          value: text.target,
+                                          speed: text.pitchSpeed,
+                                          transEnum: TransEnum.values
+                                              .firstWhere(
+                                                (item) =>
+                                                    item.ko ==
+                                                    text.targetLocale,
+                                              ),
+                                        ).then((value) {
+                                          playId.value = null;
+                                        });
+                                      }
+                                    },
+                                    child: AnimatedContainer(
+                                      duration: const Duration(
+                                        milliseconds: 300,
                                       ),
-                                    ],
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 10,
+                                        vertical: 10,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        borderRadius: SizeUtil.basicRadius(),
+                                        color: isLoading
+                                            ? null
+                                            : ColorUtil.withOpacity(
+                                                color: ColorUtil.primary,
+                                                opacity: 30,
+                                              ),
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          isPlay
+                                              ? IconEnum.stop.rounded
+                                              : IconEnum.play.outline,
+                                          CommonTextWidget(
+                                            isPlay ? "정지" : "재생",
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                   ),
-                                  SizeUtil.basicHPadding(height: 6),
-                                  Row(
-                                    children: [
-                                      const Icon(Icons.speed, size: 18),
-                                      const SizedBox(width: 6),
-                                      CommonTextWidget(
-                                        '속도: ${((text.pitchSpeed) as num).toDouble().toStringAsFixed(1)}x',
-                                        style: TextUtil.textTheme(
-                                          context,
-                                        ).labelLarge,
-                                      ),
-                                    ],
+                                  IconButton(
+                                    onPressed: () {
+                                      ref
+                                          .read(localDbStateProvider.notifier)
+                                          .setFavorite(id: text.id);
+                                    },
+                                    icon: isFavorite
+                                        ? IconEnum.favorite.rounded
+                                        : IconEnum.favorite.outline,
                                   ),
                                 ],
                               ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                CommonInkwellWidget(
-                                  tooltip: "번역 음성 ${isPlay ? "정지" : "재생"}",
-                                  onTap: () async {
-                                    if (isPlay) {
-                                      playId.value = null;
-                                      await TtsUtil.stop();
-                                    } else {
-                                      if (playId.value != null) {
-                                        await TtsUtil.stop();
-                                        await Future.delayed(
-                                          const Duration(milliseconds: 200),
-                                        );
-                                      }
-                                      playId.value = text.id;
-                                      await TtsUtil.play(
-                                        value: text.target,
-                                        speed: text.pitchSpeed,
-                                        transEnum: TransEnum.values.firstWhere(
-                                          (item) =>
-                                              item.ko == text.targetLocale,
-                                        ),
-                                      ).then((value) {
-                                        playId.value = null;
-                                      });
-                                    }
-                                  },
-                                  child: AnimatedContainer(
-                                    duration: const Duration(milliseconds: 300),
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 10,
-                                      vertical: 10,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      borderRadius: SizeUtil.basicRadius(),
-                                      color: isLoading
-                                          ? null
-                                          : ColorUtil.withOpacity(
-                                              color: ColorUtil.primary,
-                                              opacity: 30,
-                                            ),
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        isPlay
-                                            ? IconEnum.stop.rounded
-                                            : IconEnum.play.outline,
-                                        CommonTextWidget(isPlay ? "정지" : "재생"),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                IconButton(
-                                  onPressed: () {
-                                    ref
-                                        .read(localDbStateProvider.notifier)
-                                        .setFavorite(id: text.id);
-                                  },
-                                  icon: isFavorite
-                                      ? IconEnum.favorite.rounded
-                                      : IconEnum.favorite.outline,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      if (isMyText)
-                        Positioned(
-                          top: 6,
-                          right: 6,
-                          child: IconEnum.person.withRoundedColor(
-                            color: Colors.amber,
+                            ],
                           ),
                         ),
-                    ],
+                        if (isMyText)
+                          Positioned(
+                            top: 6,
+                            right: 6,
+                            child: IconEnum.person.withRoundedColor(
+                              color: Colors.amber,
+                            ),
+                          ),
+                      ],
+                    ),
                   ),
-                ),
-              );
-            },
-          ),
+                );
+              },
+            ),
         ],
       ),
     );

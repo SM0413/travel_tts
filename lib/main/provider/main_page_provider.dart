@@ -11,7 +11,7 @@ import 'package:travel_tts/utils/network_util.dart';
 import 'package:travel_tts/utils/toast_util.dart';
 import 'package:travel_tts/utils/try_catch_util.dart';
 
-class MainPageProvider extends AsyncNotifier<void> {
+class MainPageProvider extends AutoDisposeAsyncNotifier<void> {
   late final MainPageRepo _mainPageRepo;
   @override
   FutureOr<void> build() {
@@ -198,6 +198,7 @@ class MainPageProvider extends AsyncNotifier<void> {
   }
 }
 
-final mainPageProvider = AsyncNotifierProvider<MainPageProvider, void>(
-  MainPageProvider.new,
-);
+final mainPageProvider =
+    AutoDisposeAsyncNotifierProvider<MainPageProvider, void>(
+      MainPageProvider.new,
+    );

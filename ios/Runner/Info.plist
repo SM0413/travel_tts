@@ -2,6 +2,14 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<!-- google ad mob -->
+	<key>GADApplicationIdentifier</key>
+	<string>ca-app-pub-9212035172510697~6814890943</string>
+	<key>SKAdNetworkItems</key>
+	<array>
+	<dict><key>SKAdNetworkIdentifier</key><string>cstr6suwn9.skadnetwork</string></dict>
+	</array>
+	<!-- google ad mob -->
 	<!-- Permission Setting -->
 	<key>NSCalendarsUsageDescription</key>
 	<string>이 앱은 캘린더에 접근하여 이벤트를 생성하거나 확인합니다.</string>

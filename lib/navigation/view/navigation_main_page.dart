@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:travel_tts/common/view/ad_mob_banner.dart';
 import 'package:travel_tts/enums/navigation_enum.dart';
 import 'package:travel_tts/navigation/provider/navigation_state_provider.dart';
 
@@ -23,23 +24,30 @@ class NavigationMainPage extends HookConsumerWidget {
           ),
         ),
 
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: state.selectedIndex,
-          showSelectedLabels: true,
-          showUnselectedLabels: false,
-          onTap: (value) {
-            notifier.setState(selectedIndex: value);
-          },
-          items: NavigationEnum.values
-              .map(
-                (value) => BottomNavigationBarItem(
-                  icon: value.icon.outline,
-                  activeIcon: value.icon.rounded,
-                  label: value.ko,
-                  tooltip: value.ko,
-                ),
-              )
-              .toList(),
+        bottomNavigationBar: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const AdMobBanner(),
+            const SizedBox(height: 4),
+            BottomNavigationBar(
+              currentIndex: state.selectedIndex,
+              showSelectedLabels: true,
+              showUnselectedLabels: false,
+              onTap: (value) {
+                notifier.setState(selectedIndex: value);
+              },
+              items: NavigationEnum.values
+                  .map(
+                    (value) => BottomNavigationBarItem(
+                      icon: value.icon.outline,
+                      activeIcon: value.icon.rounded,
+                      label: value.ko,
+                      tooltip: value.ko,
+                    ),
+                  )
+                  .toList(),
+            ),
+          ],
         ),
       ),
     );

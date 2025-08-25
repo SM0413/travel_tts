@@ -8,7 +8,7 @@ import 'package:travel_tts/utils/network_util.dart';
 import 'package:travel_tts/utils/toast_util.dart';
 import 'package:travel_tts/utils/try_catch_util.dart';
 
-class DownloadMainPageProvider extends AsyncNotifier<void> {
+class DownloadMainPageProvider extends AutoDisposeAsyncNotifier<void> {
   @override
   FutureOr<void> build() {}
 
@@ -59,6 +59,6 @@ class DownloadMainPageProvider extends AsyncNotifier<void> {
 }
 
 final downloadMainPageProvider =
-    AsyncNotifierProvider<DownloadMainPageProvider, void>(
+    AutoDisposeAsyncNotifierProvider<DownloadMainPageProvider, void>(
       DownloadMainPageProvider.new,
     );
