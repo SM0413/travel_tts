@@ -56,16 +56,12 @@ android {
         release {
             signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
+            isShrinkResources = false
         }
         debug {
             isMinifyEnabled = false
             isShrinkResources = false
         }
-        release {
-            isMinifyEnabled = false
-            isShrinkResources = false
-        }
-
     }
 }
 
