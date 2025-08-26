@@ -11,6 +11,7 @@ import 'package:travel_tts/enums/my_main_enum.dart';
 import 'package:travel_tts/my/provider/check_network_status_provider.dart';
 import 'package:travel_tts/utils/color_util.dart';
 import 'package:travel_tts/utils/global_util.dart';
+import 'package:travel_tts/utils/router_util.dart';
 
 class MyMainPage extends HookConsumerWidget {
   const MyMainPage({super.key});
@@ -53,14 +54,9 @@ class MyMainPage extends HookConsumerWidget {
           itemBuilder: (context, index) {
             final item = MyMainEnum.values[index];
             return ListTile(
-              onTap: item.page != null
-                  ? () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => item.page!),
-                      );
-                    }
-                  : null,
+              onTap: () {
+                RouterUtil.push(context: context, routeEnum: item.page);
+              },
               leading: item.icon.rounded,
               title: CommonTextWidget(item.title),
               subtitle: CommonTextWidget(item.subTitle),

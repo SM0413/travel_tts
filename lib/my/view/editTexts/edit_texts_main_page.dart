@@ -3,6 +3,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:travel_tts/common/model/texts_model.dart';
 import 'package:travel_tts/common/provider/local_db_state_provider.dart';
 import 'package:travel_tts/common/view/widgets/common_inkwell_widget.dart';
 import 'package:travel_tts/common/view/widgets/common_scaffold_widget.dart';
@@ -14,7 +15,7 @@ import 'package:travel_tts/enums/icon_enum.dart';
 import 'package:travel_tts/enums/router_enum.dart';
 import 'package:travel_tts/enums/trans_enum.dart';
 import 'package:travel_tts/main/provider/upload_texts_provider.dart';
-import 'package:travel_tts/main/provider/upload_texts_state_provider.dart';
+import 'package:travel_tts/my/provider/editText/edit_texts_state_provider.dart';
 import 'package:travel_tts/utils/color_util.dart';
 import 'package:travel_tts/utils/global_util.dart';
 import 'package:travel_tts/utils/network_util.dart';
@@ -24,22 +25,46 @@ import 'package:travel_tts/utils/text_util.dart';
 import 'package:travel_tts/utils/toast_util.dart';
 import 'package:travel_tts/utils/tts_util.dart';
 
-class UploadTextsMainPage extends HookConsumerWidget {
-  const UploadTextsMainPage({super.key});
+class EditTextsMainPage extends HookConsumerWidget {
+  const EditTextsMainPage({super.key, required this.text});
+
+  final TextsModel text;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(uploadTextsStateProvider);
-    final stateNotifier = ref.read(uploadTextsStateProvider.notifier);
+    final state = ref.watch(editTextsStateProvider);
+    final stateNotifier = ref.read(editTextsStateProvider.notifier);
     final localDbState = ref.watch(localDbStateProvider).value;
     final isNowSpeak = useState<bool>(false);
     useEffect(() {
+      RouterUtil.waitBuild(
+        fn: () {
+          state.sourceController.text = text.source;
+          state.targetController.text = text.target;
+          stateNotifier.setState(
+            sourceTransLang: TransEnum.values
+                .firstWhere(
+                  (item) => item.ko == text.sourceLocale,
+                  orElse: () => TransEnum.korean,
+                )
+                .type,
+            targetTransLang: TransEnum.values
+                .firstWhere(
+                  (item) => item.ko == text.targetLocale,
+                  orElse: () => TransEnum.english,
+                )
+                .type,
+            tags: text.tags,
+          );
+        },
+      );
       return () {
         TtsUtil.stop();
       };
     }, []);
 
     return CommonScaffoldWidget(
-      appBar: AppBar(title: const CommonTextWidget("업로드")),
+      appBar: AppBar(title: const CommonTextWidget("수정")),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -103,13 +128,7 @@ class UploadTextsMainPage extends HookConsumerWidget {
                               SizeUtil.basicHPadding(height: 12),
                               FormBuilderDropdown<String>(
                                 key: state.sourceLocaleKey,
-                                initialValue: TransEnum.values
-                                    .firstWhere(
-                                      (value) =>
-                                          value.type == state.sourceTransLang,
-                                      orElse: () => TransEnum.korean,
-                                    )
-                                    .ko,
+                                initialValue: text.sourceLocale,
                                 name: TextsEnum.sourceLocale.name,
                                 decoration: const InputDecoration(
                                   labelText: "소스 언어",
@@ -148,7 +167,7 @@ class UploadTextsMainPage extends HookConsumerWidget {
                               SizeUtil.basicHPadding(height: 12),
                               FormBuilderDropdown<String>(
                                 key: state.targetLocaleKey,
-                                initialValue: state.initTargetLocaleValue,
+                                initialValue: text.targetLocale,
                                 name: TextsEnum.targetLocale.name,
                                 decoration: const InputDecoration(
                                   labelText: "타겟 언어",
@@ -319,7 +338,7 @@ class UploadTextsMainPage extends HookConsumerWidget {
                       FormBuilderSlider(
                         key: state.pitchSpeedKey,
                         name: TextsEnum.pitchSpeed.name,
-                        initialValue: state.initPitchSpeedValue,
+                        initialValue: text.pitchSpeed,
                         min: TransConst.minRate,
                         max: TransConst.maxRate,
                         divisions: TransConst.divisions,
@@ -342,7 +361,7 @@ class UploadTextsMainPage extends HookConsumerWidget {
                         key: state.shareKey,
                         name: TextsEnum.isShare.name,
                         title: const CommonTextWidget("공유하기"),
-                        initialValue: state.initShareValue,
+                        initialValue: text.isShare,
                         subtitle: const CommonTextWidget(
                           "다른 유저와 이 문장을 공유해보세요!",
                         ),

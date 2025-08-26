@@ -8,7 +8,6 @@ import 'package:travel_tts/common/provider/local_db_state_provider.dart';
 import 'package:travel_tts/common/provider/user_state_provider.dart';
 import 'package:travel_tts/enums/db/db_enum.dart';
 import 'package:travel_tts/enums/db/users_enum.dart';
-import 'package:travel_tts/utils/device_info_util.dart';
 import 'package:travel_tts/utils/global_util.dart';
 import 'package:travel_tts/utils/network_util.dart';
 import 'package:travel_tts/utils/string_util.dart';
@@ -94,34 +93,7 @@ class InitProvider extends AutoDisposeAsyncNotifier<void> {
       fnName: "init_provider > init",
       errorMessage: "초기화에 실패했어요",
       userId: ref.read(userStateProvider).id,
-      failFn: (e) async {
-        if (!await NetworkUtil.isOnlineNow()) {
-          await ref
-              .read(localDbStateProvider.notifier)
-              .setErrorList(
-                data: ToJsonUtil.errorLog(
-                  userId: ref.read(userStateProvider).id,
-                  e: e,
-                  stackTrace: StackTrace.current,
-                  deviceInfo: await DeviceInfoUtil.getDeviceInfo(),
-                ),
-              );
-        } else {
-          final errorList = ref.read(localDbStateProvider).value!.errorList;
-          if (!GlobalUtil.isEmpty(errorList)) {
-            final List<Future> uploadFUture = errorList.map((item) {
-              return FirebaseFirestore.instance
-                  .collection(DbEnum.errorLog.name)
-                  .doc(StringUtil.getUUID())
-                  .set(item);
-            }).toList();
-            await Future.wait(uploadFUture);
-            await ref
-                .read(localDbStateProvider.notifier)
-                .setState(errorList: []);
-          }
-        }
-      },
+      failFn: (e) async => await GlobalUtil.failFn(ref: ref, e: e),
     );
   }
 }

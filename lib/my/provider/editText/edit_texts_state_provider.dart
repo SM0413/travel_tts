@@ -2,19 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mlkit_translation/google_mlkit_translation.dart';
-import 'package:travel_tts/common/provider/local_db_state_provider.dart';
 import 'package:travel_tts/common/provider/user_state_provider.dart';
-import 'package:travel_tts/enums/trans_enum.dart';
 import 'package:travel_tts/main/model/upload_texts_model.dart';
 import 'package:travel_tts/utils/global_util.dart';
 import 'package:travel_tts/utils/toast_util.dart';
 import 'package:travel_tts/utils/trans_util.dart';
 import 'package:travel_tts/utils/try_catch_util.dart';
 
-class UploadTextsStateProvider extends AutoDisposeNotifier<UploadTextsModel> {
+class EditTextsStateProvider extends AutoDisposeNotifier<UploadTextsModel> {
   @override
   UploadTextsModel build() {
-    final localState = ref.read(localDbStateProvider).value;
     return UploadTextsModel(
       sourceController: TextEditingController(),
       targetController: TextEditingController(),
@@ -33,20 +30,7 @@ class UploadTextsStateProvider extends AutoDisposeNotifier<UploadTextsModel> {
       tagKey: GlobalUtil.createGlobalKey<FormBuilderFieldState>(),
       shareKey: GlobalUtil.createGlobalKey<FormBuilderFieldState>(),
       sourceTransLang: TranslateLanguage.korean,
-      targetTransLang: TransEnum.values
-          .firstWhere(
-            (item) => item.ko == localState?.defaultTargetLocale,
-            orElse: () => TransEnum.english,
-          )
-          .type,
-      initPitchSpeedValue: localState?.defaultPitchSpeed ?? 1.0,
-      initShareValue: localState?.isDefaultShareWhenUpload ?? false,
-      initTargetLocaleValue: TransEnum.values
-          .firstWhere(
-            (item) => item.ko == localState?.defaultTargetLocale,
-            orElse: () => TransEnum.english,
-          )
-          .ko,
+      targetTransLang: TranslateLanguage.english,
     );
   }
 
@@ -123,7 +107,7 @@ class UploadTextsStateProvider extends AutoDisposeNotifier<UploadTextsModel> {
   }
 }
 
-final uploadTextsStateProvider =
-    AutoDisposeNotifierProvider<UploadTextsStateProvider, UploadTextsModel>(
-      UploadTextsStateProvider.new,
+final editTextsStateProvider =
+    AutoDisposeNotifierProvider<EditTextsStateProvider, UploadTextsModel>(
+      EditTextsStateProvider.new,
     );

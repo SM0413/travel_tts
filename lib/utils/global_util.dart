@@ -3,6 +3,13 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:travel_tts/common/provider/local_db_state_provider.dart';
+import 'package:travel_tts/common/provider/user_state_provider.dart';
+import 'package:travel_tts/enums/db/db_enum.dart';
+import 'package:travel_tts/utils/device_info_util.dart';
+import 'package:travel_tts/utils/network_util.dart';
+import 'package:travel_tts/utils/string_util.dart';
+import 'package:travel_tts/utils/to_json_util.dart';
 
 /// 프로젝트 전체 공통 함수
 abstract class GlobalUtil {
@@ -47,5 +54,32 @@ abstract class GlobalUtil {
   ) {
     if (isEmpty(res.data())) return null;
     return res.data();
+  }
+
+  static Future<void> failFn({required dynamic ref, required dynamic e}) async {
+    if (!await NetworkUtil.isOnlineNow()) {
+      await ref
+          .read(localDbStateProvider.notifier)
+          .setErrorList(
+            data: ToJsonUtil.errorLog(
+              userId: ref.read(userStateProvider).id,
+              e: e,
+              stackTrace: StackTrace.current,
+              deviceInfo: await DeviceInfoUtil.getDeviceInfo(),
+            ),
+          );
+    } else {
+      final errorList = ref.read(localDbStateProvider).value!.errorList;
+      if (!isEmpty(errorList)) {
+        final List<Future> uploadFUture = errorList.map((item) {
+          return FirebaseFirestore.instance
+              .collection(DbEnum.errorLog.name)
+              .doc(StringUtil.getUUID())
+              .set(item);
+        }).toList();
+        await Future.wait(uploadFUture);
+        await ref.read(localDbStateProvider.notifier).setState(errorList: []);
+      }
+    }
   }
 }

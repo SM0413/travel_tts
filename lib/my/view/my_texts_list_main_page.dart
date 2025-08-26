@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:travel_tts/common/model/texts_model.dart';
@@ -7,11 +9,15 @@ import 'package:travel_tts/common/view/widgets/common_no_data_widget.dart';
 import 'package:travel_tts/common/view/widgets/common_scaffold_widget.dart';
 import 'package:travel_tts/common/view/widgets/common_sliver_widget.dart';
 import 'package:travel_tts/common/view/widgets/common_text_widget.dart';
+import 'package:travel_tts/constructs/router_param_const.dart';
 import 'package:travel_tts/enums/icon_enum.dart';
+import 'package:travel_tts/enums/router_enum.dart';
 import 'package:travel_tts/my/provider/my_texts_list_main_page_provider.dart';
 import 'package:travel_tts/my/provider/my_texts_list_main_page_state_provider.dart';
 import 'package:travel_tts/utils/alert_util.dart';
+import 'package:travel_tts/utils/color_util.dart';
 import 'package:travel_tts/utils/global_util.dart';
+import 'package:travel_tts/utils/router_util.dart';
 
 class MyTextsListMainPage extends HookConsumerWidget {
   const MyTextsListMainPage({super.key});
@@ -37,7 +43,7 @@ class MyTextsListMainPage extends HookConsumerWidget {
             },
             icon: state.isDelete
                 ? IconEnum.close.rounded
-                : IconEnum.delete.outline,
+                : IconEnum.edit.outline,
           ),
           if (state.isDelete)
             IconButton(
@@ -112,39 +118,88 @@ class MyTextsListMainPage extends HookConsumerWidget {
                     ),
                   ),
                 ),
+
               SliverList(
                 delegate: SliverChildBuilderDelegate((context, index) {
                   final text = textList[index];
-                  return ListTile(
-                    leading: Column(
-                      spacing: 5,
-                      children: [
-                        IconEnum.trans.rounded,
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            CommonTextWidget(
-                              "${text.sourceLocale} > ${text.targetLocale}",
-                            ),
-                          ],
+                  return Dismissible(
+                    background: Container(
+                      color: ColorUtil.error,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: IconEnum.delete.withOutlineColor(
+                            color: ColorUtil.white,
+                          ),
                         ),
-                      ],
+                      ),
                     ),
-                    title: CommonTextWidget(text.source),
-                    subtitle: CommonTextWidget(text.target),
-                    trailing: state.isDelete
-                        ? Checkbox(
-                            value: state.deleteModelList.contains(text),
-                            onChanged: (value) {
-                              if (value == null) return;
-                              ref
-                                  .read(
-                                    myTextsListMainPageStateProvider.notifier,
-                                  )
-                                  .setDeleteModelList(model: text);
-                            },
-                          )
-                        : IconEnum.rightArrow.rounded,
+                    secondaryBackground: Container(
+                      color: ColorUtil.error,
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 10),
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: IconEnum.delete.withOutlineColor(
+                            color: ColorUtil.white,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    key: Key(text.id),
+                    confirmDismiss: (direction) async {
+                      return await AlertUtil.show(
+                        context: context,
+                        content: "해당 번역을 삭제하시겠어요?",
+                        confirmFn: () async {
+                          await ref
+                              .read(myTextsListMainPageProvider.notifier)
+                              .deleteSingle(model: text);
+                        },
+                      );
+                    },
+                    child: ListTile(
+                      onTap: () {
+                        RouterUtil.push(
+                          context: context,
+                          routeEnum: RouterEnum.editTexts,
+                          data: {
+                            RouterParamConst.json: jsonEncode(text.toJson()),
+                          },
+                        );
+                      },
+                      leading: Column(
+                        spacing: 5,
+                        children: [
+                          IconEnum.trans.rounded,
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              CommonTextWidget(
+                                "${text.sourceLocale} > ${text.targetLocale}",
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      title: CommonTextWidget(text.source),
+                      subtitle: CommonTextWidget(text.target),
+                      trailing: state.isDelete
+                          ? Checkbox(
+                              value: state.deleteModelList.contains(text),
+                              onChanged: (value) {
+                                if (value == null) return;
+                                ref
+                                    .read(
+                                      myTextsListMainPageStateProvider.notifier,
+                                    )
+                                    .setDeleteModelList(model: text);
+                              },
+                            )
+                          : IconEnum.rightArrow.rounded,
+                    ),
                   );
                 }, childCount: textList.length),
               ),

@@ -7,12 +7,16 @@ import 'package:go_router/go_router.dart';
 import 'package:travel_tts/common/model/texts_model.dart';
 import 'package:travel_tts/common/view/widgets/common_error_widget.dart';
 import 'package:travel_tts/constructs/router_param_const.dart';
+import 'package:travel_tts/download/view/download_main_page.dart';
 import 'package:travel_tts/enums/router_enum.dart';
 import 'package:travel_tts/init/view/init_main_page.dart';
 import 'package:travel_tts/main/provider/upload_texts_state_provider.dart';
 import 'package:travel_tts/main/view/texts_detail_main_page.dart';
 import 'package:travel_tts/main/view/upload_texts_main_page.dart';
-import 'package:travel_tts/navigation/provider/navigation_state_provider.dart';
+import 'package:travel_tts/my/provider/editText/edit_texts_state_provider.dart';
+import 'package:travel_tts/my/view/editTexts/edit_texts_main_page.dart';
+import 'package:travel_tts/my/view/my_texts_list_main_page.dart';
+import 'package:travel_tts/my/view/setting/my_setting_main_page.dart';
 import 'package:travel_tts/navigation/view/navigation_main_page.dart';
 import 'package:travel_tts/utils/alert_util.dart';
 import 'package:travel_tts/utils/global_util.dart';
@@ -91,17 +95,10 @@ final routerProvider = Provider<GoRouter>((ref) {
               );
             },
             onExit: (context, state) async {
-              final confirm = await _commonLeavePage(
+              return await _commonLeavePage(
                 context: context,
                 isFinished: ref.read(uploadTextsStateProvider).isFinished,
               );
-
-              if (!confirm) {
-                ref
-                    .read(navigationStateProvider.notifier)
-                    .setState(selectedIndex: 0);
-              }
-              return confirm;
             },
           ),
           GoRoute(
@@ -119,6 +116,58 @@ final routerProvider = Provider<GoRouter>((ref) {
               final textsModel = TextsModel.fromJson(jsonDecode(json!));
               return TextsDetailMainPage(state: textsModel);
             },
+          ),
+
+          GoRoute(
+            path: RouterEnum.myTexts.path,
+            name: RouterEnum.myTexts.name,
+            builder: (context, state) => const MyTextsListMainPage(),
+            routes: [
+              GoRoute(
+                path: RouterEnum.editTexts.path,
+                name: RouterEnum.editTexts.name,
+                pageBuilder: (context, state) {
+                  final json = RouterUtil.getParameter(
+                    state: state,
+                    key: RouterParamConst.json,
+                  );
+                  if (GlobalUtil.isEmpty(json)) {
+                    return _commonFadeBuilder(
+                      state: state,
+                      child: _commonNoDataWidget(),
+                    );
+                  }
+                  print(json);
+                  final text = TextsModel.fromJson(jsonDecode(json!));
+                  return _commonFadeBuilder(
+                    state: state,
+                    child: EditTextsMainPage(text: text),
+                  );
+                },
+                onExit: (context, state) async {
+                  final json = RouterUtil.getParameter(
+                    state: state,
+                    key: RouterParamConst.json,
+                  );
+                  if (GlobalUtil.isEmpty(json)) return true;
+
+                  return await _commonLeavePage(
+                    context: context,
+                    isFinished: ref.read(editTextsStateProvider).isFinished,
+                  );
+                },
+              ),
+              GoRoute(
+                path: RouterEnum.myDownload.path,
+                name: RouterEnum.myDownload.name,
+                builder: (context, state) => const DownloadMainPage(),
+              ),
+              GoRoute(
+                path: RouterEnum.mySetting.path,
+                name: RouterEnum.mySetting.name,
+                builder: (context, state) => const MySettingMainPage(),
+              ),
+            ],
           ),
         ], // navigation routes
       ),

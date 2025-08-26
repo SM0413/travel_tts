@@ -28,17 +28,13 @@ class TextsDetailMainPage extends HookConsumerWidget {
   final TextsModel state;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final model = useState<TextsModel>(const TextsModel());
+    final model = useState<TextsModel>(state);
     final targetKey = GlobalUtil.createGlobalKey<FormBuilderFieldState>();
     final speedKey = GlobalUtil.createGlobalKey<FormBuilderFieldState>();
-    final transStr = useState<String>("");
+    final transStr = useState<String>(state.target);
     final isPlay = useState<bool>(false);
     final isMy = model.value.userId == ref.watch(userStateProvider).id;
     useEffect(() {
-      Future(() {
-        model.value = state;
-        transStr.value = state.target;
-      });
       return () {
         TtsUtil.stop();
       };
@@ -90,18 +86,9 @@ class TextsDetailMainPage extends HookConsumerWidget {
                       final availableTrans = TransEnum.values
                           .where((e) => downloaded.contains(e.ko))
                           .toList();
-                      final hasTarget = availableTrans.any(
-                        (e) => e.ko == model.value.targetLocale,
-                      );
-                      final safeTargetInitial = hasTarget
-                          ? model.value.targetLocale
-                          : null;
 
                       final double minRate = TransConst.minRate;
                       final double maxRate = TransConst.maxRate;
-                      final double safeSpeed = (model.value.pitchSpeed)
-                          .clamp(minRate, maxRate)
-                          .toDouble();
 
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -129,7 +116,7 @@ class TextsDetailMainPage extends HookConsumerWidget {
                                         ),
                                       )
                                       .toList(),
-                                  initialValue: safeTargetInitial,
+                                  initialValue: state.targetLocale,
                                   onChanged: (value) async {
                                     if (model.value.sourceLocale == value) {
                                       ToastUtil.show(title: "소스와 동일한 언어입니다");
@@ -168,7 +155,7 @@ class TextsDetailMainPage extends HookConsumerWidget {
                           FormBuilderSlider(
                             key: speedKey,
                             name: TextsEnum.pitchSpeed.name,
-                            initialValue: safeSpeed,
+                            initialValue: state.pitchSpeed,
                             min: minRate,
                             max: maxRate,
                             divisions: TransConst.divisions,
