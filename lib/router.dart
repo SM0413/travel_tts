@@ -85,13 +85,9 @@ final routerProvider = Provider<GoRouter>((ref) {
             path: RouterEnum.uploadTexts.path,
             name: RouterEnum.uploadTexts.name,
             pageBuilder: (context, state) {
-              final source = RouterUtil.getParameter(
-                state: state,
-                key: RouterParamConst.source,
-              );
               return _commonFadeBuilder(
                 state: state,
-                child: UploadTextsMainPage(source: source),
+                child: const UploadTextsMainPage(),
               );
             },
             onExit: (context, state) async {

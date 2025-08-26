@@ -26,8 +26,7 @@ import 'package:travel_tts/utils/toast_util.dart';
 import 'package:travel_tts/utils/tts_util.dart';
 
 class UploadTextsMainPage extends HookConsumerWidget {
-  const UploadTextsMainPage({super.key, required this.source});
-  final String? source;
+  const UploadTextsMainPage({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(uploadTextsStateProvider);
@@ -35,15 +34,11 @@ class UploadTextsMainPage extends HookConsumerWidget {
     final localDbState = ref.watch(localDbStateProvider).value;
     final isNowSpeak = useState<bool>(false);
     useEffect(() {
-      RouterUtil.waitBuild(
-        fn: () {
-          state.sourceController.text = source ?? "";
-        },
-      );
       return () {
         TtsUtil.stop();
       };
     }, []);
+
     return CommonScaffoldWidget(
       appBar: AppBar(title: const CommonTextWidget("업로드")),
       body: SafeArea(
@@ -150,13 +145,7 @@ class UploadTextsMainPage extends HookConsumerWidget {
                             SizeUtil.basicHPadding(height: 12),
                             FormBuilderDropdown<String>(
                               key: state.targetLocaleKey,
-                              initialValue: TransEnum.values
-                                  .firstWhere(
-                                    (value) =>
-                                        value.type == state.targetTransLang,
-                                    orElse: () => TransEnum.english,
-                                  )
-                                  .ko,
+                              initialValue: state.initTargetLocaleValue,
                               name: TextsEnum.targetLocale.name,
                               decoration: const InputDecoration(
                                 labelText: "타겟 언어",
@@ -320,7 +309,7 @@ class UploadTextsMainPage extends HookConsumerWidget {
                     FormBuilderSlider(
                       key: state.pitchSpeedKey,
                       name: TextsEnum.pitchSpeed.name,
-                      initialValue: 1,
+                      initialValue: state.initPitchSpeedValue,
                       min: TransConst.minRate,
                       max: TransConst.maxRate,
                       divisions: TransConst.divisions,
@@ -343,6 +332,7 @@ class UploadTextsMainPage extends HookConsumerWidget {
                       key: state.shareKey,
                       name: TextsEnum.isShare.name,
                       title: const CommonTextWidget("공유하기"),
+                      initialValue: state.initShareValue,
                       subtitle: const CommonTextWidget("다른 유저와 이 문장을 공유해보세요!"),
                       onChanged: (value) async {
                         if (value == true && !await NetworkUtil.isOnlineNow()) {

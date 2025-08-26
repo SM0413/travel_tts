@@ -6,6 +6,7 @@ import 'package:google_mlkit_translation/google_mlkit_translation.dart';
 import 'package:travel_tts/common/provider/local_db_state_provider.dart';
 import 'package:travel_tts/common/provider/user_state_provider.dart';
 import 'package:travel_tts/enums/db/db_enum.dart';
+import 'package:travel_tts/enums/trans_enum.dart';
 import 'package:travel_tts/main/model/upload_texts_model.dart';
 import 'package:travel_tts/utils/device_info_util.dart';
 import 'package:travel_tts/utils/global_util.dart';
@@ -19,6 +20,7 @@ import 'package:travel_tts/utils/try_catch_util.dart';
 class UploadTextsStateProvider extends AutoDisposeNotifier<UploadTextsModel> {
   @override
   UploadTextsModel build() {
+    final localState = ref.read(localDbStateProvider).value;
     return UploadTextsModel(
       sourceController: TextEditingController(),
       targetController: TextEditingController(),
@@ -37,7 +39,20 @@ class UploadTextsStateProvider extends AutoDisposeNotifier<UploadTextsModel> {
       tagKey: GlobalUtil.createGlobalKey<FormBuilderFieldState>(),
       shareKey: GlobalUtil.createGlobalKey<FormBuilderFieldState>(),
       sourceTransLang: TranslateLanguage.korean,
-      targetTransLang: TranslateLanguage.english,
+      targetTransLang: TransEnum.values
+          .firstWhere(
+            (item) => item.ko == localState?.defaultTargetLocale,
+            orElse: () => TransEnum.english,
+          )
+          .type,
+      initPitchSpeedValue: localState?.defaultPitchSpeed ?? 1.0,
+      initShareValue: localState?.isDefaultShareWhenUpload ?? false,
+      initTargetLocaleValue: TransEnum.values
+          .firstWhere(
+            (item) => item.ko == localState?.defaultTargetLocale,
+            orElse: () => TransEnum.english,
+          )
+          .ko,
     );
   }
 

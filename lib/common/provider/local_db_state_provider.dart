@@ -40,6 +40,15 @@ class LocalDbStateProvider extends AsyncNotifier<LocalDbModel> {
               .cast<Map<String, dynamic>>() ??
           [],
       uid: repo.getString(key: LocalDbEnum.uid.name) ?? "",
+      defaultPitchSpeed: double.parse(
+        repo.getString(key: LocalDbEnum.defaultPitchSpeed.name) ?? "1.0",
+      ),
+      defaultTargetLocale:
+          repo.getString(key: LocalDbEnum.defaultTargetLocale.name) ?? "영어",
+      isDefaultShareWhenUpload: bool.parse(
+        repo.getString(key: LocalDbEnum.isDefaultShareWhenUpload.name) ??
+            "false",
+      ),
     );
   }
 
@@ -49,6 +58,9 @@ class LocalDbStateProvider extends AsyncNotifier<LocalDbModel> {
     List<String>? downloadedLangPack,
     List<String>? favoriteList,
     String? uid,
+    double? defaultPitchSpeed,
+    String? defaultTargetLocale,
+    bool? isDefaultShareWhenUpload,
   }) async {
     final Map<String, dynamic> fields = {
       if (texts != null)
@@ -61,6 +73,14 @@ class LocalDbStateProvider extends AsyncNotifier<LocalDbModel> {
         LocalDbEnum.downloadedLangPack.name: downloadedLangPack,
       if (favoriteList != null) LocalDbEnum.favoriteList.name: favoriteList,
       if (uid != null) LocalDbEnum.uid.name: uid,
+      if (defaultPitchSpeed != null)
+        LocalDbEnum.defaultPitchSpeed.name: jsonEncode(defaultPitchSpeed),
+      if (defaultTargetLocale != null)
+        LocalDbEnum.defaultTargetLocale.name: jsonEncode(defaultTargetLocale),
+      if (isDefaultShareWhenUpload != null)
+        LocalDbEnum.isDefaultShareWhenUpload.name: jsonEncode(
+          isDefaultShareWhenUpload,
+        ),
     };
 
     await _setLocalDb(fields: fields);
@@ -73,6 +93,10 @@ class LocalDbStateProvider extends AsyncNotifier<LocalDbModel> {
         favoriteList: favoriteList ?? current.favoriteList,
         uid: uid ?? current.uid,
         errorList: errorList ?? current.errorList,
+        defaultPitchSpeed: defaultPitchSpeed ?? current.defaultPitchSpeed,
+        defaultTargetLocale: defaultTargetLocale ?? current.defaultTargetLocale,
+        isDefaultShareWhenUpload:
+            isDefaultShareWhenUpload ?? current.isDefaultShareWhenUpload,
       ),
     );
   }

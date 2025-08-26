@@ -27,6 +27,9 @@ abstract class UploadTextsModel with _$UploadTextsModel {
     required TranslateLanguage sourceTransLang,
     required TranslateLanguage targetTransLang,
     @Default(false) bool isFinished,
+    @Default(false) bool initShareValue,
+    @Default("영어") String initTargetLocaleValue,
+    @Default(1.0) double initPitchSpeedValue,
     @Default([]) List<String> tags,
   }) = _UploadTextsModel; // 올바른 생성자 이름
 }

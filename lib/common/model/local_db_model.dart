@@ -11,5 +11,8 @@ abstract class LocalDbModel with _$LocalDbModel {
     @Default([]) List<Map<String, dynamic>> errorList,
     @Default(["한국어", "영어"]) List<String> downloadedLangPack,
     @Default("") String uid,
+    @Default(1.0) double defaultPitchSpeed,
+    @Default("영어") String defaultTargetLocale,
+    @Default(false) bool isDefaultShareWhenUpload,
   }) = _LocalDbModel; // 올바른 생성자 이름
 }

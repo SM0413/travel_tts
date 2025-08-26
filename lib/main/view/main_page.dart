@@ -122,10 +122,6 @@ class MainPage extends HookConsumerWidget {
                     RouterUtil.push(
                       context: context,
                       routeEnum: RouterEnum.uploadTexts,
-                      data: {
-                        RouterParamConst.source: state.searchController.text
-                            .trim(),
-                      },
                     );
                   },
                   icon: const Icon(Icons.add_outlined),

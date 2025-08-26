@@ -82,9 +82,17 @@ class DownloadMainPageProvider extends AutoDisposeAsyncNotifier<void> {
             ref.read(localDbStateProvider).value!.downloadedLangPack,
           );
           asisDownloadedList.remove(tranEnum.ko);
+          // 기본 설정인 ["영어", "한국어"] 만 남아있는 상태
           ref
               .read(localDbStateProvider.notifier)
-              .setState(downloadedLangPack: asisDownloadedList);
+              .setState(
+                downloadedLangPack: asisDownloadedList,
+                defaultTargetLocale:
+                    asisDownloadedList.length ==
+                        2 // 기본 설정인 ["영어", "한국어"] 만 남아있는 상태
+                    ? "영어"
+                    : null,
+              );
         });
       },
       isShowToast: true,
