@@ -15,6 +15,9 @@ enum IconEnum {
   stop(Icon(Icons.stop_outlined), Icon(Icons.stop_rounded)),
   share(Icon(Icons.cloud_upload_outlined), Icon(Icons.cloud_upload_rounded)),
   notShare(Icon(Icons.cloud_off_outlined), Icon(Icons.cloud_off_rounded)),
+  edit(Icon(Icons.edit_outlined), Icon(Icons.edit_rounded)),
+  noEdit(Icon(Icons.edit_off_outlined), Icon(Icons.edit_off_rounded)),
+  refresh(Icon(Icons.refresh_outlined), Icon(Icons.refresh_rounded)),
   checkCircle(
     Icon(Icons.check_circle_outline),
     Icon(Icons.check_circle_rounded),

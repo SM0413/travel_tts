@@ -11,4 +11,5 @@ abstract class RouterParamConst {
 
   // 상세화면
   static const String id = "id";
+  static const String json = "json";
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:travel_tts/enums/navigation_enum.dart';
 import 'package:travel_tts/navigation/provider/navigation_state_provider.dart';
+import 'package:travel_tts/utils/color_util.dart';
 
 class NavigationMainPage extends HookConsumerWidget {
   const NavigationMainPage({super.key});
@@ -32,6 +33,7 @@ class NavigationMainPage extends HookConsumerWidget {
               currentIndex: state.selectedIndex,
               showSelectedLabels: true,
               showUnselectedLabels: false,
+              fixedColor: ColorUtil.black,
               onTap: (value) {
                 notifier.setState(selectedIndex: value);
               },

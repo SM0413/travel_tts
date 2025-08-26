@@ -1,12 +1,16 @@
+import 'dart:convert';
+
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:travel_tts/common/model/texts_model.dart';
 import 'package:travel_tts/common/view/widgets/common_error_widget.dart';
 import 'package:travel_tts/constructs/router_param_const.dart';
 import 'package:travel_tts/enums/router_enum.dart';
 import 'package:travel_tts/init/view/init_main_page.dart';
 import 'package:travel_tts/main/provider/upload_texts_state_provider.dart';
+import 'package:travel_tts/main/view/texts_detail_main_page.dart';
 import 'package:travel_tts/main/view/upload_texts_main_page.dart';
 import 'package:travel_tts/navigation/provider/navigation_state_provider.dart';
 import 'package:travel_tts/navigation/view/navigation_main_page.dart';
@@ -104,13 +108,28 @@ final routerProvider = Provider<GoRouter>((ref) {
               return confirm;
             },
           ),
-        ],
+          GoRoute(
+            path: RouterEnum.detailTexts.path,
+            name: RouterEnum.detailTexts.name,
+            builder: (context, state) {
+              final json = RouterUtil.getParameter(
+                state: state,
+                key: RouterParamConst.json,
+              );
+              if (GlobalUtil.isEmpty(json)) {
+                return _commonNoDataWidget();
+              }
+
+              final textsModel = TextsModel.fromJson(jsonDecode(json!));
+              return TextsDetailMainPage(state: textsModel);
+            },
+          ),
+        ], // navigation routes
       ),
     ],
   );
 });
 
-// ignore: unused_element
 Widget _commonNoDataWidget({String? subTitle}) {
   return Scaffold(
     body: Center(child: CommonErrorWidget(subTitle: subTitle ?? "필수값이 없어요")),

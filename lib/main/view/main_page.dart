@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -15,7 +18,6 @@ import 'package:travel_tts/enums/router_enum.dart';
 import 'package:travel_tts/enums/trans_enum.dart';
 import 'package:travel_tts/main/provider/main_page_provider.dart';
 import 'package:travel_tts/main/provider/main_page_state_provider.dart';
-import 'package:travel_tts/main/view/texts_info_bottom_sheet.dart';
 import 'package:travel_tts/utils/color_util.dart';
 import 'package:travel_tts/utils/global_util.dart';
 import 'package:travel_tts/utils/router_util.dart';
@@ -27,6 +29,7 @@ class MainPage extends HookConsumerWidget {
   const MainPage({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    log("MainPage", name: "BUILD");
     final state = ref.watch(mainPageStateProvider);
     final localDbState = ref.watch(localDbStateProvider).value;
     final isLoading = ref.watch(mainPageProvider).isLoading;
@@ -163,18 +166,10 @@ class MainPage extends HookConsumerWidget {
                     tooltip: "상세페이지",
                     onTap: () async {
                       await TtsUtil.stop();
-                      await showModalBottomSheet(
+                      RouterUtil.push(
                         context: context,
-                        isScrollControlled: true,
-                        useSafeArea: true,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(16),
-                          ),
-                        ),
-                        builder: (ctx) {
-                          return TextsInfoBottomSheet(state: text);
-                        },
+                        routeEnum: RouterEnum.detailTexts,
+                        data: {RouterParamConst.json: jsonEncode(text)},
                       );
                     },
                     child: Stack(

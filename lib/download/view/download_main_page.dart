@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:travel_tts/common/provider/local_db_state_provider.dart';
+import 'package:travel_tts/common/view/widgets/common_scaffold_widget.dart';
 import 'package:travel_tts/common/view/widgets/common_sliver_widget.dart';
 import 'package:travel_tts/common/view/widgets/common_text_widget.dart';
 import 'package:travel_tts/download/provider/download_main_page_provider.dart';
@@ -27,56 +28,59 @@ class DownloadMainPage extends HookConsumerWidget {
       );
       return null;
     }, []);
-    return CommonSliverWidget(
-      slivers: [
-        SliverToBoxAdapter(
-          child: ExpansionTile(
-            initiallyExpanded: true,
-            title: const CommonTextWidget("언어 팩"),
-            children: TransEnum.values.map((item) {
-              final isDownloaded = localDbState.downloadedLangPack.any(
-                (localData) => localData == item.ko,
-              );
-              return ListTile(
-                title: CommonTextWidget(item.ko),
-                trailing: isDownloaded
-                    ? IconButton(
-                        onPressed: () async {
-                          if (item == TransEnum.korean ||
-                              item == TransEnum.english) {
-                            ToastUtil.show(
-                              title:
-                                  "${TransEnum.korean.ko}와 ${TransEnum.english.ko}는 필수 팩 입니다",
+    return CommonScaffoldWidget(
+      appBar: AppBar(title: const CommonTextWidget("다운로드")),
+      body: CommonSliverWidget(
+        slivers: [
+          SliverToBoxAdapter(
+            child: ExpansionTile(
+              initiallyExpanded: true,
+              title: const CommonTextWidget("언어 팩"),
+              children: TransEnum.values.map((item) {
+                final isDownloaded = localDbState.downloadedLangPack.any(
+                  (localData) => localData == item.ko,
+                );
+                return ListTile(
+                  title: CommonTextWidget(item.ko),
+                  trailing: isDownloaded
+                      ? IconButton(
+                          onPressed: () async {
+                            if (item == TransEnum.korean ||
+                                item == TransEnum.english) {
+                              ToastUtil.show(
+                                title:
+                                    "${TransEnum.korean.ko}와 ${TransEnum.english.ko}는 필수 팩 입니다",
+                              );
+                              return;
+                            }
+                            await AlertUtil.show(
+                              context: context,
+                              title: "${item.ko} 언어팩을 삭제하시겠어요?",
+                              confirmFn: () async {
+                                await ref
+                                    .read(downloadMainPageProvider.notifier)
+                                    .deletePack(tranEnum: item);
+                              },
                             );
-                            return;
-                          }
-                          await AlertUtil.show(
-                            context: context,
-                            title: "${item.ko} 언어팩을 삭제하시겠어요?",
-                            confirmFn: () async {
-                              await ref
-                                  .read(downloadMainPageProvider.notifier)
-                                  .deletePack(tranEnum: item);
-                            },
-                          );
-                        },
-                        icon: IconEnum.checkCircle.withRoundedColor(
-                          color: ColorUtil.success,
+                          },
+                          icon: IconEnum.checkCircle.withRoundedColor(
+                            color: ColorUtil.success,
+                          ),
+                        )
+                      : IconButton(
+                          onPressed: () async {
+                            await ref
+                                .read(downloadMainPageProvider.notifier)
+                                .downloadPack(tranEnum: item);
+                          },
+                          icon: IconEnum.download.outline,
                         ),
-                      )
-                    : IconButton(
-                        onPressed: () async {
-                          await ref
-                              .read(downloadMainPageProvider.notifier)
-                              .downloadPack(tranEnum: item);
-                        },
-                        icon: IconEnum.download.outline,
-                      ),
-              );
-            }).toList(),
+                );
+              }).toList(),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
