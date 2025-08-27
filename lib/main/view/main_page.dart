@@ -89,6 +89,7 @@ class MainPage extends HookConsumerWidget {
 
     return RefreshIndicator(
       onRefresh: () async {
+        await TtsUtil.stop();
         await ref.read(mainPageProvider.notifier).getData();
       },
       child: CommonSliverWidget(
