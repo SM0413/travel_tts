@@ -35,7 +35,7 @@ class MainPageRepo {
     await _db
         .collection(DbEnum.texts.name)
         .doc(data[TextsEnum.id.name])
-        .set(data);
+        .set(data, SetOptions(merge: true));
     return data;
   }
 

@@ -58,6 +58,7 @@ class MyTextsListMainPageProvider extends AutoDisposeAsyncNotifier<void> {
       fnName: "my_texts_list_main_page_provider > deleteText",
       errorMessage: "실패했어요",
       userId: ref.read(userStateProvider).id,
+      isNeedCloseLoading: true,
       failFn: (e) async => await GlobalUtil.failFn(ref: ref, e: e),
     );
   }

@@ -18,12 +18,8 @@ _TextsModel _$TextsModelFromJson(Map<String, dynamic> json) => _TextsModel(
   userId: json['userId'] as String? ?? "",
   pitchSpeed: (json['pitchSpeed'] as num?)?.toDouble() ?? 1,
   isShare: json['isShare'] as bool? ?? false,
-  createdAt: json['created_at'] == null
-      ? null
-      : DateTime.parse(json['created_at'] as String),
-  updatedAt: json['updated_at'] == null
-      ? null
-      : DateTime.parse(json['updated_at'] as String),
+  createdAt: ModelUtil.fromJsonTimeStamp(json['createdAt']),
+  updatedAt: ModelUtil.fromJsonTimeStamp(json['updatedAt']),
 );
 
 Map<String, dynamic> _$TextsModelToJson(_TextsModel instance) =>
@@ -37,6 +33,6 @@ Map<String, dynamic> _$TextsModelToJson(_TextsModel instance) =>
       'userId': instance.userId,
       'pitchSpeed': instance.pitchSpeed,
       'isShare': instance.isShare,
-      'created_at': instance.createdAt?.toIso8601String(),
-      'updated_at': instance.updatedAt?.toIso8601String(),
+      'createdAt': instance.createdAt?.toIso8601String(),
+      'updatedAt': instance.updatedAt?.toIso8601String(),
     };

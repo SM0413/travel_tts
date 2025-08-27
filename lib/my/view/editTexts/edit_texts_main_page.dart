@@ -14,7 +14,7 @@ import 'package:travel_tts/enums/db/texts_enum.dart';
 import 'package:travel_tts/enums/icon_enum.dart';
 import 'package:travel_tts/enums/router_enum.dart';
 import 'package:travel_tts/enums/trans_enum.dart';
-import 'package:travel_tts/main/provider/upload_texts_provider.dart';
+import 'package:travel_tts/my/provider/editText/edit_texts_provider.dart';
 import 'package:travel_tts/my/provider/editText/edit_texts_state_provider.dart';
 import 'package:travel_tts/utils/color_util.dart';
 import 'package:travel_tts/utils/global_util.dart';
@@ -38,7 +38,18 @@ class EditTextsMainPage extends HookConsumerWidget {
     final isNowSpeak = useState<bool>(false);
     useEffect(() {
       RouterUtil.waitBuild(
-        fn: () {
+        fn: () async {
+          if (text.isShare && !await NetworkUtil.isOnlineNow()) {
+            ToastUtil.show(
+              title: "확인해주세요",
+              subTitle: "공유된 내용은 인터넷이 연결된 상태에서만 수정 가능해요",
+            );
+            await Future.delayed(const Duration(seconds: 2), () {
+              stateNotifier.setState(isFinished: true);
+              RouterUtil.pop(context);
+            });
+            return;
+          }
           state.sourceController.text = text.source;
           state.targetController.text = text.target;
           stateNotifier.setState(
@@ -438,11 +449,13 @@ class EditTextsMainPage extends HookConsumerWidget {
             return;
           }
           await stateNotifier.updateTrans();
-          await ref.read(uploadTextsProvider.notifier).upload().then((value) {
-            if (value) {
-              RouterUtil.go(context: context, routeEnum: RouterEnum.navigation);
-            }
-          });
+          await ref.read(editTextsProvider.notifier).edit(asisModel: text).then(
+            (value) {
+              if (value) {
+                RouterUtil.pop(context);
+              }
+            },
+          );
         },
       ),
     );

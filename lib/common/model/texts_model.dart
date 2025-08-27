@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:travel_tts/utils/model_util.dart';
 
 part 'texts_model.freezed.dart';
 part 'texts_model.g.dart';
@@ -15,8 +16,8 @@ abstract class TextsModel with _$TextsModel {
     @Default("") String userId,
     @Default(1) double pitchSpeed,
     @Default(false) bool isShare,
-    @JsonKey(name: "created_at") DateTime? createdAt,
-    @JsonKey(name: "updated_at") DateTime? updatedAt,
+    @JsonKey(fromJson: ModelUtil.fromJsonTimeStamp) DateTime? createdAt,
+    @JsonKey(fromJson: ModelUtil.fromJsonTimeStamp) DateTime? updatedAt,
   }) = _TextsModel;
 
   factory TextsModel.fromJson(Map<String, dynamic> json) =>

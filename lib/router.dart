@@ -137,7 +137,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                       child: _commonNoDataWidget(),
                     );
                   }
-                  print(json);
+
                   final text = TextsModel.fromJson(jsonDecode(json!));
                   return _commonFadeBuilder(
                     state: state,

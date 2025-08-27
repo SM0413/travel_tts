@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TextsModel {
 
- String get id; String get source; String get target; String get sourceLocale; String get targetLocale; List<String> get tags; String get userId; double get pitchSpeed; bool get isShare;@JsonKey(name: "created_at") DateTime? get createdAt;@JsonKey(name: "updated_at") DateTime? get updatedAt;
+ String get id; String get source; String get target; String get sourceLocale; String get targetLocale; List<String> get tags; String get userId; double get pitchSpeed; bool get isShare;@JsonKey(fromJson: ModelUtil.fromJsonTimeStamp) DateTime? get createdAt;@JsonKey(fromJson: ModelUtil.fromJsonTimeStamp) DateTime? get updatedAt;
 /// Create a copy of TextsModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $TextsModelCopyWith<$Res>  {
   factory $TextsModelCopyWith(TextsModel value, $Res Function(TextsModel) _then) = _$TextsModelCopyWithImpl;
 @useResult
 $Res call({
- String id, String source, String target, String sourceLocale, String targetLocale, List<String> tags, String userId, double pitchSpeed, bool isShare,@JsonKey(name: "created_at") DateTime? createdAt,@JsonKey(name: "updated_at") DateTime? updatedAt
+ String id, String source, String target, String sourceLocale, String targetLocale, List<String> tags, String userId, double pitchSpeed, bool isShare,@JsonKey(fromJson: ModelUtil.fromJsonTimeStamp) DateTime? createdAt,@JsonKey(fromJson: ModelUtil.fromJsonTimeStamp) DateTime? updatedAt
 });
 
 
@@ -163,7 +163,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String source,  String target,  String sourceLocale,  String targetLocale,  List<String> tags,  String userId,  double pitchSpeed,  bool isShare, @JsonKey(name: "created_at")  DateTime? createdAt, @JsonKey(name: "updated_at")  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String source,  String target,  String sourceLocale,  String targetLocale,  List<String> tags,  String userId,  double pitchSpeed,  bool isShare, @JsonKey(fromJson: ModelUtil.fromJsonTimeStamp)  DateTime? createdAt, @JsonKey(fromJson: ModelUtil.fromJsonTimeStamp)  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TextsModel() when $default != null:
 return $default(_that.id,_that.source,_that.target,_that.sourceLocale,_that.targetLocale,_that.tags,_that.userId,_that.pitchSpeed,_that.isShare,_that.createdAt,_that.updatedAt);case _:
@@ -184,7 +184,7 @@ return $default(_that.id,_that.source,_that.target,_that.sourceLocale,_that.targ
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String source,  String target,  String sourceLocale,  String targetLocale,  List<String> tags,  String userId,  double pitchSpeed,  bool isShare, @JsonKey(name: "created_at")  DateTime? createdAt, @JsonKey(name: "updated_at")  DateTime? updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String source,  String target,  String sourceLocale,  String targetLocale,  List<String> tags,  String userId,  double pitchSpeed,  bool isShare, @JsonKey(fromJson: ModelUtil.fromJsonTimeStamp)  DateTime? createdAt, @JsonKey(fromJson: ModelUtil.fromJsonTimeStamp)  DateTime? updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _TextsModel():
 return $default(_that.id,_that.source,_that.target,_that.sourceLocale,_that.targetLocale,_that.tags,_that.userId,_that.pitchSpeed,_that.isShare,_that.createdAt,_that.updatedAt);case _:
@@ -204,7 +204,7 @@ return $default(_that.id,_that.source,_that.target,_that.sourceLocale,_that.targ
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String source,  String target,  String sourceLocale,  String targetLocale,  List<String> tags,  String userId,  double pitchSpeed,  bool isShare, @JsonKey(name: "created_at")  DateTime? createdAt, @JsonKey(name: "updated_at")  DateTime? updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String source,  String target,  String sourceLocale,  String targetLocale,  List<String> tags,  String userId,  double pitchSpeed,  bool isShare, @JsonKey(fromJson: ModelUtil.fromJsonTimeStamp)  DateTime? createdAt, @JsonKey(fromJson: ModelUtil.fromJsonTimeStamp)  DateTime? updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _TextsModel() when $default != null:
 return $default(_that.id,_that.source,_that.target,_that.sourceLocale,_that.targetLocale,_that.tags,_that.userId,_that.pitchSpeed,_that.isShare,_that.createdAt,_that.updatedAt);case _:
@@ -219,7 +219,7 @@ return $default(_that.id,_that.source,_that.target,_that.sourceLocale,_that.targ
 @JsonSerializable()
 
 class _TextsModel implements TextsModel {
-  const _TextsModel({this.id = "", this.source = "", this.target = "", this.sourceLocale = "", this.targetLocale = "", final  List<String> tags = const [], this.userId = "", this.pitchSpeed = 1, this.isShare = false, @JsonKey(name: "created_at") this.createdAt, @JsonKey(name: "updated_at") this.updatedAt}): _tags = tags;
+  const _TextsModel({this.id = "", this.source = "", this.target = "", this.sourceLocale = "", this.targetLocale = "", final  List<String> tags = const [], this.userId = "", this.pitchSpeed = 1, this.isShare = false, @JsonKey(fromJson: ModelUtil.fromJsonTimeStamp) this.createdAt, @JsonKey(fromJson: ModelUtil.fromJsonTimeStamp) this.updatedAt}): _tags = tags;
   factory _TextsModel.fromJson(Map<String, dynamic> json) => _$TextsModelFromJson(json);
 
 @override@JsonKey() final  String id;
@@ -237,8 +237,8 @@ class _TextsModel implements TextsModel {
 @override@JsonKey() final  String userId;
 @override@JsonKey() final  double pitchSpeed;
 @override@JsonKey() final  bool isShare;
-@override@JsonKey(name: "created_at") final  DateTime? createdAt;
-@override@JsonKey(name: "updated_at") final  DateTime? updatedAt;
+@override@JsonKey(fromJson: ModelUtil.fromJsonTimeStamp) final  DateTime? createdAt;
+@override@JsonKey(fromJson: ModelUtil.fromJsonTimeStamp) final  DateTime? updatedAt;
 
 /// Create a copy of TextsModel
 /// with the given fields replaced by the non-null parameter values.
@@ -273,7 +273,7 @@ abstract mixin class _$TextsModelCopyWith<$Res> implements $TextsModelCopyWith<$
   factory _$TextsModelCopyWith(_TextsModel value, $Res Function(_TextsModel) _then) = __$TextsModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String source, String target, String sourceLocale, String targetLocale, List<String> tags, String userId, double pitchSpeed, bool isShare,@JsonKey(name: "created_at") DateTime? createdAt,@JsonKey(name: "updated_at") DateTime? updatedAt
+ String id, String source, String target, String sourceLocale, String targetLocale, List<String> tags, String userId, double pitchSpeed, bool isShare,@JsonKey(fromJson: ModelUtil.fromJsonTimeStamp) DateTime? createdAt,@JsonKey(fromJson: ModelUtil.fromJsonTimeStamp) DateTime? updatedAt
 });
 
 
