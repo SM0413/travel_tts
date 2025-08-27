@@ -20,20 +20,46 @@ class DownloadMainPageProvider extends AutoDisposeAsyncNotifier<void> {
         if (!await NetworkUtil.isOnlineNow(isShowToast: true)) {
           return;
         }
-        await ToastUtil.loading(() async {
-          final modelManager = OnDeviceTranslatorModelManager();
-          await modelManager.downloadModel(tranEnum.type.bcpCode);
-          final asisDownloadedList = List<String>.from(
-            ref.read(localDbStateProvider).value!.downloadedLangPack,
-          );
-          asisDownloadedList.add(tranEnum.ko);
-          ref
-              .read(localDbStateProvider.notifier)
-              .setState(downloadedLangPack: asisDownloadedList);
-        });
+        final modelManager = OnDeviceTranslatorModelManager();
+        await modelManager.downloadModel(tranEnum.type.bcpCode);
+        final asisDownloadedList = List<String>.from(
+          ref.read(localDbStateProvider).value!.downloadedLangPack,
+        );
+        asisDownloadedList.add(tranEnum.ko);
+        ref
+            .read(localDbStateProvider.notifier)
+            .setState(downloadedLangPack: asisDownloadedList);
       },
       isShowToast: true,
       fnName: "download_main_page_provider > downloadPack",
+      errorMessage: "언어팩 다운로드에 실패했어요",
+      userId: ref.read(userStateProvider).id,
+      failFn: (e) async => await GlobalUtil.failFn(ref: ref, e: e),
+    );
+  }
+
+  Future<void> downloadAllPack() async {
+    return await TryCatchUtil.handle(
+      fn: () async {
+        if (!await NetworkUtil.isOnlineNow(isShowToast: true)) {
+          return;
+        }
+        final modelManager = OnDeviceTranslatorModelManager();
+        final allEnums = TransEnum.values;
+        for (final item in allEnums) {
+          final code = item.type.bcpCode;
+          if (!await modelManager.isModelDownloaded(code)) {
+            await modelManager.downloadModel(code);
+          }
+        }
+        ref
+            .read(localDbStateProvider.notifier)
+            .setState(
+              downloadedLangPack: allEnums.map((item) => item.ko).toList(),
+            );
+      },
+      isShowToast: true,
+      fnName: "download_main_page_provider > downloadAllPack",
       errorMessage: "언어팩 다운로드에 실패했어요",
       userId: ref.read(userStateProvider).id,
       failFn: (e) async => await GlobalUtil.failFn(ref: ref, e: e),
@@ -58,13 +84,45 @@ class DownloadMainPageProvider extends AutoDisposeAsyncNotifier<void> {
                 defaultTargetLocale:
                     asisDownloadedList.length ==
                         2 // 기본 설정인 ["영어", "한국어"] 만 남아있는 상태
-                    ? "영어"
+                    ? TransEnum.english.ko
                     : null,
               );
         });
       },
       isShowToast: true,
       fnName: "download_main_page_provider > deletePack",
+      errorMessage: "언어팩 삭제에 실패했어요",
+      userId: ref.read(userStateProvider).id,
+      failFn: (e) async => await GlobalUtil.failFn(ref: ref, e: e),
+    );
+  }
+
+  Future<void> deleteAllPack() async {
+    return await TryCatchUtil.handle(
+      fn: () async {
+        final allEnum = TransEnum.values.where(
+          (item) => item != TransEnum.korean && item != TransEnum.english,
+        );
+        final modelManager = OnDeviceTranslatorModelManager();
+        final futures = allEnum.map((item) async {
+          final code = item.type.bcpCode;
+          if (await modelManager.isModelDownloaded(code)) {
+            return modelManager.deleteModel(code);
+          }
+        });
+
+        await Future.wait(futures);
+
+        // 기본 설정인 ["영어", "한국어"] 만 남아있는 상태
+        ref
+            .read(localDbStateProvider.notifier)
+            .setState(
+              downloadedLangPack: [TransEnum.korean.ko, TransEnum.english.ko],
+              defaultTargetLocale: TransEnum.english.ko,
+            );
+      },
+      isShowToast: true,
+      fnName: "download_main_page_provider > deleteAllPack",
       errorMessage: "언어팩 삭제에 실패했어요",
       userId: ref.read(userStateProvider).id,
       failFn: (e) async => await GlobalUtil.failFn(ref: ref, e: e),

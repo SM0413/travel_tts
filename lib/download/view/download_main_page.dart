@@ -19,17 +19,60 @@ class DownloadMainPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final localDbState = ref.watch(localDbStateProvider).value!;
+    final isDownLoadedAll = useState<bool>(false);
+
+    useEffect(() {
+      if (!context.mounted) return;
+      isDownLoadedAll.value =
+          localDbState.downloadedLangPack.length == TransEnum.values.length;
+      return null;
+    }, [localDbState.downloadedLangPack]);
 
     useEffect(() {
       RouterUtil.waitBuild(
         fn: () async {
           await NetworkUtil.isOnlineNow(isShowToast: true);
+          if (!context.mounted) return;
+          isDownLoadedAll.value =
+              localDbState.downloadedLangPack.length == TransEnum.values.length;
         },
       );
       return null;
     }, []);
     return CommonScaffoldWidget(
-      appBar: AppBar(title: const CommonTextWidget("다운로드")),
+      appBar: AppBar(
+        title: const CommonTextWidget("다운로드"),
+        actions: [
+          Tooltip(
+            message: isDownLoadedAll.value ? "전체 언어 팩 삭제" : "전체 언어 팩 다운로드",
+            child: IconButton(
+              onPressed: () async {
+                final confirm = await AlertUtil.show(
+                  context: context,
+                  title:
+                      "전체 언어 팩을 ${isDownLoadedAll.value ? "삭제" : "다운로드"} 합니다",
+                  content: isDownLoadedAll.value ? null : "최대 10분이 소요됩니다",
+                  confirmFn: () async {},
+                );
+                if (confirm) {
+                  ToastUtil.loading(() async {
+                    if (isDownLoadedAll.value) {
+                      await ref
+                          .read(downloadMainPageProvider.notifier)
+                          .deleteAllPack();
+                    } else {
+                      await ref
+                          .read(downloadMainPageProvider.notifier)
+                          .downloadAllPack();
+                    }
+                  });
+                }
+              },
+              icon: IconEnum.download.rounded,
+            ),
+          ),
+        ],
+      ),
       body: CommonSliverWidget(
         slivers: [
           SliverToBoxAdapter(
@@ -69,9 +112,11 @@ class DownloadMainPage extends HookConsumerWidget {
                         )
                       : IconButton(
                           onPressed: () async {
-                            await ref
-                                .read(downloadMainPageProvider.notifier)
-                                .downloadPack(tranEnum: item);
+                            await ToastUtil.loading(() async {
+                              await ref
+                                  .read(downloadMainPageProvider.notifier)
+                                  .downloadPack(tranEnum: item);
+                            });
                           },
                           icon: IconEnum.download.outline,
                         ),
