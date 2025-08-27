@@ -5,6 +5,7 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:travel_tts/common/model/texts_model.dart';
 import 'package:travel_tts/common/provider/local_db_state_provider.dart';
+import 'package:travel_tts/common/view/widgets/common_app_bar_widget.dart';
 import 'package:travel_tts/common/view/widgets/common_inkwell_widget.dart';
 import 'package:travel_tts/common/view/widgets/common_scaffold_widget.dart';
 import 'package:travel_tts/common/view/widgets/common_submit_widget.dart';
@@ -75,7 +76,7 @@ class EditTextsMainPage extends HookConsumerWidget {
     }, []);
 
     return CommonScaffoldWidget(
-      appBar: AppBar(title: const CommonTextWidget("수정")),
+      appBar: const CommonAppBarWidget(title: CommonTextWidget("수정")),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(

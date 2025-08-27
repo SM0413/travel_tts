@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:travel_tts/common/provider/local_db_state_provider.dart';
+import 'package:travel_tts/common/view/widgets/common_app_bar_widget.dart';
 import 'package:travel_tts/common/view/widgets/common_error_widget.dart';
 import 'package:travel_tts/common/view/widgets/common_scaffold_widget.dart';
 import 'package:travel_tts/common/view/widgets/common_sliver_widget.dart';
@@ -15,7 +16,7 @@ class MySettingMainPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return CommonScaffoldWidget(
-      appBar: AppBar(title: const CommonTextWidget("개인 설정")),
+      appBar: const CommonAppBarWidget(title: CommonTextWidget("개인 설정")),
       body: CommonSliverWidget(
         slivers: [
           ref

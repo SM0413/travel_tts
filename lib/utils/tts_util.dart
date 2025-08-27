@@ -15,7 +15,6 @@ abstract class TtsUtil {
 
   static Future<void> setSpeechRate(double speed) async {
     await _init();
-    await _tts.setPitch(1);
     // rate는 0.1 ~ 2.0 사이의 값이어야 함
     final clamped = speed.clamp(0.1, 2.0);
     double rate = clamped;

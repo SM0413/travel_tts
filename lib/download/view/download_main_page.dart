@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:travel_tts/common/provider/local_db_state_provider.dart';
+import 'package:travel_tts/common/view/widgets/common_app_bar_widget.dart';
 import 'package:travel_tts/common/view/widgets/common_scaffold_widget.dart';
 import 'package:travel_tts/common/view/widgets/common_sliver_widget.dart';
 import 'package:travel_tts/common/view/widgets/common_text_widget.dart';
@@ -40,7 +41,7 @@ class DownloadMainPage extends HookConsumerWidget {
       return null;
     }, []);
     return CommonScaffoldWidget(
-      appBar: AppBar(
+      appBar: CommonAppBarWidget(
         title: const CommonTextWidget("다운로드"),
         actions: [
           Tooltip(

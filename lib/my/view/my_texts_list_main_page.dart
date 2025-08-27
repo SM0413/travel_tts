@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:travel_tts/common/model/texts_model.dart';
 import 'package:travel_tts/common/provider/local_db_state_provider.dart';
+import 'package:travel_tts/common/view/widgets/common_app_bar_widget.dart';
 import 'package:travel_tts/common/view/widgets/common_error_widget.dart';
 import 'package:travel_tts/common/view/widgets/common_no_data_widget.dart';
 import 'package:travel_tts/common/view/widgets/common_scaffold_widget.dart';
@@ -28,7 +29,7 @@ class MyTextsListMainPage extends HookConsumerWidget {
     final state = ref.watch(myTextsListMainPageStateProvider);
 
     return CommonScaffoldWidget(
-      appBar: AppBar(
+      appBar: CommonAppBarWidget(
         title: CommonTextWidget("나의 번역${state.isDelete ? " 삭제" : ""}"),
         actions: [
           IconButton(

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -5,12 +7,15 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:travel_tts/common/model/texts_model.dart';
 import 'package:travel_tts/common/provider/local_db_state_provider.dart';
 import 'package:travel_tts/common/provider/user_state_provider.dart';
+import 'package:travel_tts/common/view/widgets/common_app_bar_widget.dart';
 import 'package:travel_tts/common/view/widgets/common_inkwell_widget.dart';
 import 'package:travel_tts/common/view/widgets/common_scaffold_widget.dart';
 import 'package:travel_tts/common/view/widgets/common_text_widget.dart';
+import 'package:travel_tts/constructs/router_param_const.dart';
 import 'package:travel_tts/constructs/trans_const.dart';
 import 'package:travel_tts/enums/db/texts_enum.dart';
 import 'package:travel_tts/enums/icon_enum.dart';
+import 'package:travel_tts/enums/router_enum.dart';
 import 'package:travel_tts/enums/trans_enum.dart';
 import 'package:travel_tts/main/provider/main_page_provider.dart';
 import 'package:travel_tts/utils/alert_util.dart';
@@ -40,27 +45,37 @@ class TextsDetailMainPage extends HookConsumerWidget {
       };
     }, []);
     return CommonScaffoldWidget(
-      appBar: AppBar(
+      appBar: CommonAppBarWidget(
         title: CommonTextWidget(state.source),
-        actions: [
-          IconButton(onPressed: () {}, icon: IconEnum.edit.rounded),
-          if (isMy)
-            IconButton(
-              onPressed: () async {
-                await AlertUtil.show(
-                  context: context,
-                  title: "해당 내용을 삭제하시겠어요?",
-                  confirmFn: () async {
-                    await ref
-                        .read(mainPageProvider.notifier)
-                        .deleteText(model: model.value);
-                    RouterUtil.pop(context);
+        actions: isMy
+            ? [
+                IconButton(
+                  onPressed: () {
+                    RouterUtil.push(
+                      context: context,
+                      routeEnum: RouterEnum.editTexts,
+                      data: {RouterParamConst.json: jsonEncode(state.toJson())},
+                    );
                   },
-                );
-              },
-              icon: IconEnum.delete.outline,
-            ),
-        ],
+                  icon: IconEnum.edit.rounded,
+                ),
+                IconButton(
+                  onPressed: () async {
+                    await AlertUtil.show(
+                      context: context,
+                      title: "해당 내용을 삭제하시겠어요?",
+                      confirmFn: () async {
+                        await ref
+                            .read(mainPageProvider.notifier)
+                            .deleteText(model: model.value);
+                        RouterUtil.pop(context);
+                      },
+                    );
+                  },
+                  icon: IconEnum.delete.outline,
+                ),
+              ]
+            : null,
       ),
       body: SafeArea(
         child: SingleChildScrollView(

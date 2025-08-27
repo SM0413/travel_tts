@@ -45,7 +45,13 @@ class DownloadMainPageProvider extends AutoDisposeAsyncNotifier<void> {
           return;
         }
         final modelManager = OnDeviceTranslatorModelManager();
-        final allEnums = TransEnum.values;
+        final allEnums = TransEnum.values.where(
+          (item) => !ref
+              .read(localDbStateProvider)
+              .value!
+              .downloadedLangPack
+              .contains(item.ko),
+        );
         for (final item in allEnums) {
           final code = item.type.bcpCode;
           if (!await modelManager.isModelDownloaded(code)) {
@@ -55,7 +61,9 @@ class DownloadMainPageProvider extends AutoDisposeAsyncNotifier<void> {
         ref
             .read(localDbStateProvider.notifier)
             .setState(
-              downloadedLangPack: allEnums.map((item) => item.ko).toList(),
+              downloadedLangPack: TransEnum.values
+                  .map((item) => item.ko)
+                  .toList(),
             );
       },
       isShowToast: true,
@@ -76,7 +84,7 @@ class DownloadMainPageProvider extends AutoDisposeAsyncNotifier<void> {
             ref.read(localDbStateProvider).value!.downloadedLangPack,
           );
           asisDownloadedList.remove(tranEnum.ko);
-          // 기본 설정인 ["영어", "한국어"] 만 남아있는 상태
+
           ref
               .read(localDbStateProvider.notifier)
               .setState(
@@ -113,11 +121,13 @@ class DownloadMainPageProvider extends AutoDisposeAsyncNotifier<void> {
 
         await Future.wait(futures);
 
-        // 기본 설정인 ["영어", "한국어"] 만 남아있는 상태
         ref
             .read(localDbStateProvider.notifier)
             .setState(
-              downloadedLangPack: [TransEnum.korean.ko, TransEnum.english.ko],
+              downloadedLangPack: [
+                TransEnum.korean.ko,
+                TransEnum.english.ko,
+              ], // 기본 설정인 ["영어", "한국어"] 만 남아있는 상태
               defaultTargetLocale: TransEnum.english.ko,
             );
       },
