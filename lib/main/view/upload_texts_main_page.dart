@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:google_mlkit_language_id/google_mlkit_language_id.dart';
+import 'package:google_mlkit_translation/google_mlkit_translation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:travel_tts/common/provider/local_db_state_provider.dart';
 import 'package:travel_tts/common/view/widgets/common_app_bar_widget.dart';
@@ -33,6 +35,36 @@ class UploadTextsMainPage extends HookConsumerWidget {
     final stateNotifier = ref.read(uploadTextsStateProvider.notifier);
     final localDbState = ref.watch(localDbStateProvider).value;
     final isNowSpeak = useState<bool>(false);
+    useListenable(state.sourceFocus); // ← 포커스 변화 시 리빌드 유도
+    final hasFocus = state.sourceFocus.hasFocus;
+
+    useEffect(() {
+      if (hasFocus) return null; // 포커스가 사라졌을 때만 실행
+      final languageIdentifier = LanguageIdentifier(confidenceThreshold: 0.5);
+      var cancelled = false;
+
+      Future(() async {
+        final text = state.sourceController.text.trim();
+        if (text.isEmpty) return;
+        final code = await languageIdentifier.identifyLanguage(
+          text,
+        ); // ex: "en", "ko", "und"
+
+        if (cancelled) return;
+        final detected = TransEnum.values.firstWhere(
+          (e) => e.type.bcpCode == code.split('-').first, // "en-US" -> "en"
+          orElse: () => TransEnum.english,
+        );
+        stateNotifier.setState(sourceTransLang: detected.type);
+        state.sourceLocaleKey.currentState?.setValue(detected.ko);
+      });
+
+      return () {
+        cancelled = true;
+        languageIdentifier.close();
+      };
+    }, [hasFocus]); // 텍스트 바뀔 때도 재판단 원하면 포함
+
     useEffect(() {
       return () {
         TtsUtil.stop();
